@@ -95,25 +95,29 @@
       display: flex;
       gap: 12px;
       align-items: baseline;
+      flex-wrap: wrap;
     }
 
     .q-number {
       background: #d9e8ff;
-      width: 32px;
+      width: auto;
+      min-width: 48px;
       height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border-radius: 60px;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #1e4a8a;
       flex-shrink: 0;
+      padding: 0 12px;
     }
 
     .q-text p {
       margin: 0;
       display: inline;
+      flex: 1;
     }
 
     .question-image {
@@ -211,7 +215,7 @@
       box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* result panel */
+    /* result panel - simplified to only show score */
     .result-panel {
       background: #ffffffdd;
       backdrop-filter: blur(4px);
@@ -228,33 +232,13 @@
       display: inline-block;
       background: #eef3ff;
       border-radius: 100px;
-      padding: 0.3rem 1.2rem;
-      font-size: 1.6rem;
+      padding: 0.5rem 1.8rem;
+      font-size: 1.8rem;
       font-weight: 800;
       color: #0a2540;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
     }
 
-    .feedback-message {
-      font-size: 1rem;
-      color: #2c3e66;
-      font-weight: 500;
-    }
-
-    .mistake-note {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      background: #fef4e6;
-      display: inline-block;
-      padding: 0.3rem 1rem;
-      border-radius: 50px;
-    }
-
-    hr {
-      margin: 1rem 0;
-      border-color: #e9eff5;
-    }
-    
     .simple-footer {
       text-align: center;
       margin-top: 2rem;
@@ -279,6 +263,10 @@
       }
       .title-badge {
         flex-direction: column;
+      }
+      .q-number {
+        font-size: 0.75rem;
+        min-width: 42px;
       }
     }
 
@@ -454,6 +442,20 @@ iv. Time consuming`,
     return userSelections.filter(sel => sel !== null).length;
   }
 
+  // Function to extract the question number from the beginning of the text (e.g., "38.")
+  // and also return the cleaned text without the number prefix
+  function extractQuestionNumberAndText(rawText) {
+    // Match pattern like "38. " or "39. " at the beginning
+    const match = rawText.match(/^(\d+)\.\s+/);
+    if (match) {
+      const number = match[1];
+      const cleanedText = rawText.replace(/^\d+\.\s+/, '');
+      return { number, cleanedText };
+    }
+    // Fallback: if no number found, return empty number and original text
+    return { number: null, cleanedText: rawText };
+  }
+
   // render the entire quiz with clear red highlighting for wrong answers after submit
   function renderQuiz() {
     let html = '';
@@ -474,7 +476,17 @@ iv. Time consuming`,
       }
       
       html += `<div class="${cardClasses}" data-qidx="${idx}">`;
-      html += `<div class="q-text"><span class="q-number">${idx+1}</span> <p>${item.q}</p></div>`;
+      
+      // Extract question number and cleaned text
+      const { number, cleanedText } = extractQuestionNumberAndText(item.q);
+      
+      // Display question with number badge if number exists
+      html += `<div class="q-text">`;
+      if (number) {
+        html += `<span class="q-number">Q${number}</span>`;
+      }
+      html += `<p>${cleanedText}</p>`;
+      html += `</div>`;
       
       if (item.image) {
         html += `<div class="question-image"><img src="${item.image}" alt="Research design diagram" loading="lazy"></div>`;
@@ -540,7 +552,7 @@ iv. Time consuming`,
     }
   }
   
-  // compute score and display result panel (no reset button inside)
+  // display result panel - ONLY SHOW SCORE, nothing else
   function displayResultOnly() {
     let correctCount = 0;
     quizData.forEach((item, idx) => {
@@ -548,35 +560,10 @@ iv. Time consuming`,
       if (selected !== null && selected === item.answer) correctCount++;
     });
     const total = quizData.length;
-    const percentage = (correctCount / total) * 100;
-    let masteryMessage = "";
-    if (percentage === 100) masteryMessage = "🎉 Outstanding! You've mastered Research Design concepts perfectly.";
-    else if (percentage >= 80) masteryMessage = "🌟 Excellent work! Strong grasp of research methodology fundamentals.";
-    else if (percentage >= 60) masteryMessage = "📘 Good attempt! Review the red-highlighted questions to strengthen understanding.";
-    else masteryMessage = "📌 Keep learning! Focus on causal research conditions, qualitative characteristics, and projective techniques. Review explanations above.";
-    
-    const wrongCount = quizData.filter((item, idx) => {
-      const selected = userSelections[idx];
-      return selected !== null && selected !== item.answer;
-    }).length;
-    const unansweredCount = total - countAnswered();
-    
-    let mistakeSummary = "";
-    if (wrongCount > 0 || unansweredCount > 0) {
-      mistakeSummary = `<div class="mistake-note">📊 Review focus: ${wrongCount} incorrect ${wrongCount > 0 ? '❌' : ''} &nbsp;|&nbsp; ${unansweredCount} unanswered ${unansweredCount > 0 ? '⚠️' : ''}</div>`;
-    }
     
     resultDiv.style.display = "block";
     resultDiv.innerHTML = `
       <div class="score-circle">🏆 ${correctCount} / ${total}</div>
-      <div class="feedback-message">${masteryMessage}</div>
-      ${mistakeSummary}
-      <hr>
-      <div style="font-size:0.85rem; color:#2c5270; margin-top:8px; line-height:1.5;">
-        📖 <strong>Educational recap:</strong> Qualitative research emphasizes insights & flexible sampling. Causal research requires concomitant variation and time sequence. 
-        Projective techniques include word association, sentence completion, and construction — "Projection" itself is not a standalone technique name in this context.
-        Longitudinal research disadvantage statements: reliability is an advantage, not a disadvantage.
-      </div>
     `;
   }
   
@@ -610,7 +597,7 @@ iv. Time consuming`,
     quizSubmitted = true;
     // re-render with prominent red highlights for wrong/unanswered answers
     renderQuiz();
-    // show results panel with score and advice
+    // show results panel with score only
     displayResultOnly();
     
     // Smooth scroll to results for convenience
