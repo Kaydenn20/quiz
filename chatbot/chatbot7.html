@@ -1,806 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Topic 7: Sampling | Marketing Research Assistant</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 7: Sampling Design & Procedures | Chatbot</title>
 
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
-            background: #f5f7f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        .chat-container {
-            width: 100%;
-            max-width: 750px;
-            height: 90vh;
-            min-height: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #e8ece0;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .chat-header {
-            background: #2e7d32;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1b5e20;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar {
-            width: 42px;
-            height: 42px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #2e7d32;
-        }
-        .header-info h2 {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .header-info p {
-            color: #c8e6c9;
-            font-size: 0.7rem;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            color: white;
-        }
-        .clear-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-            transition: all 0.2s;
-        }
-        .clear-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            background: #ffffff;
-        }
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f0f2e8;
-            border-radius: 10px;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #bdc9a4;
-            border-radius: 10px;
-        }
+.chat-app {
+    width: 100%;
+    max-width: 1300px;
+    height: 90vh;
+    background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+    display: flex;
+    overflow: hidden;
+}
 
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .user-message { align-self: flex-end; }
-        .bot-message { align-self: flex-start; }
+.side-panel {
+    width: 290px;
+    background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
+    padding: 28px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-        .bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            word-wrap: break-word;
-        }
-        .user-bubble {
-            background: #2e7d32;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        .bot-bubble {
-            background: #f0f2e8;
-            color: #1a2e1f;
-            border-bottom-left-radius: 4px;
-        }
-        .message-time {
-            font-size: 0.65rem;
-            margin-top: 6px;
-            color: #8f9b7a;
-            padding-left: 12px;
-        }
+.side-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.side-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
 
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 10px 16px;
-            background: #f0f2e8;
-            border-radius: 20px;
-            width: fit-content;
-        }
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #2e7d32;
-            border-radius: 50%;
-            animation: blink 1.3s infinite ease-in-out;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8);}
-            30% { opacity: 1; transform: scale(1.2);}
-        }
+.brand {
+    margin-bottom: 28px;
+    flex-shrink: 0;
+}
 
-        .streaming-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.1em;
-            background-color: #2e7d32;
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blinkCursor 1s step-end infinite;
-        }
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+.brand h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-        .chat-input-area {
-            background: #ffffff;
-            padding: 16px;
-            border-top: 1px solid #e8ece0;
-        }
-        .input-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            background: #f8faf3;
-            border: 1px solid #d4dbc8;
-            border-radius: 28px;
-            padding: 4px 6px 4px 18px;
-            transition: all 0.2s;
-        }
-        .input-wrapper:focus-within {
-            border-color: #2e7d32;
-            box-shadow: 0 0 0 2px rgba(46,125,50,0.1);
-        }
-        .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 12px 0;
-            color: #1a2e1f;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .input-wrapper input::placeholder {
-            color: #b0bba0;
-        }
-        .input-wrapper button {
-            background: #2e7d32;
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .input-wrapper button:hover:not(:disabled) {
-            background: #1b5e20;
-            transform: scale(1.02);
-        }
-        .input-wrapper button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+.brand p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 6px;
+}
 
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .suggestion-chip {
-            background: #f0f2e8;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #2e7d32;
-            font-weight: 500;
-            border: 1px solid #d4dbc8;
-        }
-        .suggestion-chip:hover {
-            background: #2e7d32;
-            color: white;
-            border-color: #2e7d32;
-        }
+.topic-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 
-        .footer {
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 8px;
-            color: #b0bba0;
-            background: #ffffff;
-            border-top: 1px solid #e8ece0;
-        }
-        
-        .bot-bubble strong {
-            color: #2e7d32;
-        }
-        
-        .formula {
-            font-family: 'Courier New', monospace;
-            background: #e8ece0;
-            padding: 4px 8px;
-            border-radius: 8px;
-            display: inline-block;
-            margin: 4px 0;
-        }
-    </style>
+.topic-section h4 {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+.topic-list::-webkit-scrollbar {
+    width: 4px;
+}
+.topic-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.topic-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
+
+.topic-chip {
+    background: rgba(255,255,255,0.12);
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.topic-chip:hover {
+    background: #ffffff;
+    color: #1a3c2c;
+    transform: translateX(4px);
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fefefe;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid #e9edf2;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2e3a;
+}
+
+.chat-header span {
+    font-size: 0.75rem;
+    color: #5c6f87;
+}
+
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fafcff;
+}
+
+.messages-area::-webkit-scrollbar {
+    width: 6px;
+}
+.messages-area::-webkit-scrollbar-track {
+    background: #eef2f8;
+    border-radius: 8px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+    background: #b9c8b2;
+    border-radius: 8px;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 24px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.bot-msg {
+    background: #f0f4f9;
+    border: 1px solid #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    color: #1e2a3a;
+}
+
+.user-msg {
+    background: #1a5d3c;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.input-row {
+    padding: 16px 24px 24px 24px;
+    border-top: 1px solid #eef2f8;
+    background: white;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 60px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-row input:focus {
+    border-color: #1a5d3c;
+    box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
+}
+
+.input-row button {
+    background: #1a5d3c;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-row button:hover {
+    background: #0e3f28;
+}
+
+@media (max-width: 700px) {
+    .side-panel { display: none; }
+    .message-bubble { max-width: 90%; }
+}
+</style>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="header-left">
-            <div class="avatar">🎯</div>
-            <div class="header-info">
-                <h2>Topic 7: Sampling Assistant</h2>
-                <p>Sampling Terms • Techniques • Process • Sample Size Determination</p>
-            </div>
+
+<div class="chat-app">
+    <div class="side-panel">
+        <div class="brand">
+            <h2>📊 Marketing Research<br>& Analytics AI</h2>
+            <p>Topic 7: Sampling Design & Procedures</p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <div class="badge">Learning Activities</div>
-            <button id="clearChatBtn" class="clear-btn">Clear</button>
+        <div class="topic-section">
+            <h4>📚 TOPIC 7: KEY CONCEPTS</h4>
+            <div class="topic-list">
+                <div class="topic-chip" data-question="What is population, element, sampling frame, sample, subject?">📖 Sampling Terms (Population, Element, Frame, Sample, Subject)</div>
+                <div class="topic-chip" data-question="What are the steps in the sampling process?">🔄 Sampling Process (5 Steps)</div>
+                <div class="topic-chip" data-question="What is non-probability sampling? Types">🎲 Non-Probability Sampling (Convenience, Judgmental, Quota, Snowball)</div>
+                <div class="topic-chip" data-question="What is probability sampling? Types">🎯 Probability Sampling (Simple Random, Systematic, Stratified, Cluster)</div>
+                <div class="topic-chip" data-question="Explain convenience sampling">🪑 Convenience Sampling</div>
+                <div class="topic-chip" data-question="Explain judgmental or purposive sampling">🎯 Judgmental/Purposive Sampling</div>
+                <div class="topic-chip" data-question="Explain quota sampling">📊 Quota Sampling</div>
+                <div class="topic-chip" data-question="Explain snowball sampling">⛄ Snowball Sampling</div>
+                <div class="topic-chip" data-question="Explain simple random sampling">🎲 Simple Random Sampling</div>
+                <div class="topic-chip" data-question="Explain systematic sampling">📏 Systematic Sampling</div>
+                <div class="topic-chip" data-question="Explain stratified sampling">📐 Stratified Sampling</div>
+                <div class="topic-chip" data-question="Explain cluster sampling">🗺️ Cluster Sampling</div>
+                <div class="topic-chip" data-question="How to determine sample size? Qualitative approach">📏 Sample Size Determination (Qualitative)</div>
+                <div class="topic-chip" data-question="How to determine sample size using confidence interval?">📊 Sample Size using Confidence Interval</div>
+                <div class="topic-chip" data-question="What is alpha, power, and effect size in sample size?">⚡ Alpha, Power, and Effect Size</div>
+            </div>
         </div>
     </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="bubble bot-bubble">
-                🎯 <strong>Welcome to Topic 7: Sampling in Marketing Research!</strong><br><br>
-                I'm here to help you master the art and science of sampling.<br><br>
-                <strong>📌 Learning Outcomes Covered:</strong><br><br>
-                ✅ <strong>Important Sampling Terms</strong> – Population, element, sampling frame, sample, subject<br>
-                ✅ <strong>Sampling Techniques</strong> – Non-probability & Probability sampling<br>
-                ✅ <strong>Sampling Process</strong> – 5 systematic stages<br>
-                ✅ <strong>Sample Size Determination</strong> – Qualitative & Statistical approaches<br><br>
-                <strong>🔍 What I can help with:</strong><br>
-                • <strong>Sampling Terms</strong> – Population, element, sampling frame, sample, subject<br>
-                • <strong>Non-Probability Sampling</strong> – Convenience, judgmental, quota, snowball<br>
-                • <strong>Probability Sampling</strong> – Simple random, systematic, stratified, cluster<br>
-                • <strong>Sampling Process</strong> – Define population → select frame → determine technique → determine size → select units<br>
-                • <strong>Sample Size</strong> – Qualitative (Krejcie & Morgan) & Statistical (confidence interval, effect size)<br><br>
-                Just type your question below or click a suggestion! 🎯
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3>📊 Topic 7: Sampling Design & Procedures</h3>
+            <span>Based on your complete lecture notes | Non-Probability & Probability Sampling | Sample Size Determination</span>
+        </div>
+        <div class="messages-area" id="chatMessages">
+            <div class="message-bubble bot-msg">
+                👋 <strong>Welcome to Topic 7!</strong> I'm your Marketing Research AI for <strong>Sampling Design and Procedures</strong>.<br><br>
+                📖 Based on your lecture notes, I can teach you about:<br>
+                • <strong>Sampling Terms</strong> - Population, element, sampling frame, sample, subject<br>
+                • <strong>Sampling Process</strong> - 5 sequential stages<br>
+                • <strong>Non-Probability Sampling</strong> - Convenience, judgmental, quota, snowball<br>
+                • <strong>Probability Sampling</strong> - Simple random, systematic, stratified, cluster<br>
+                • <strong>Sample Size Determination</strong> - Qualitative and statistical approaches<br>
+                • <strong>Alpha, Power, and Effect Size</strong> - Key concepts for sample size<br><br>
+                Ask me anything from Topic 7, or click any topic on the left!
             </div>
-            <div class="message-time">Just now</div>
         </div>
-    </div>
-
-    <div class="chat-input-area">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ask about sampling terms, non-probability sampling, probability sampling, sample size..." autocomplete="off">
-            <button id="sendBtn">➤</button>
+        <div class="input-row">
+            <input type="text" id="userQuery" placeholder="e.g., What is the difference between probability and non-probability sampling?..." autocomplete="off">
+            <button id="sendBtn">Send →</button>
         </div>
-        <div class="suggestions" id="suggestionsPanel">
-            <div class="suggestion-chip">What is population, sampling frame, and sample?</div>
-            <div class="suggestion-chip">Explain the 5 steps in sampling process</div>
-            <div class="suggestion-chip">Non-probability sampling techniques (convenience, judgmental, quota, snowball)</div>
-            <div class="suggestion-chip">Probability sampling techniques (random, systematic, stratified, cluster)</div>
-            <div class="suggestion-chip">How to determine sample size using Krejcie & Morgan table?</div>
-            <div class="suggestion-chip">Sample size using confidence interval approach (mean & proportion)</div>
-            <div class="suggestion-chip">What is effect size, alpha, and power in sample size?</div>
-            <div class="suggestion-chip">Differences between non-probability and probability sampling</div>
-        </div>
-        <div class="footer">💡 Based on your Topic 7 module • Sampling Terms • Techniques • Sample Size • Green Theme</div>
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // TOPIC 7: SAMPLING IN MARKETING RESEARCH
-    // Based on complete module content: Sampling Terms, Non-Probability & Probability Sampling,
-    // Sampling Process, Sample Size Determination (Qualitative & Statistical)
-    // ============================================================
-    
-    let conversationHistory = [];
-    let isThinking = false;
+    const messagesContainer = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userQuery');
+    const sendButton = document.getElementById('sendBtn');
 
-    const messagesDiv = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-
-    function getSmartResponse(userMessage, history) {
-        const q = userMessage.toLowerCase().trim();
-        
-        // ========== SAMPLING TERMS ==========
-        if ((q.includes("sampling terms") || q.includes("population") || q.includes("sampling frame") || 
-             q.includes("element") || q.includes("sample") || q.includes("subject") || q.includes("respondent")) && 
-            !q.includes("technique") && !q.includes("process") && !q.includes("size")) {
-            return `📊 **Key Sampling Terms – Essential Definitions**\n\n` +
-                   `**POPULATION (N)**\n` +
-                   `• The entire group of people, objects, events, or things of interest that the researcher would like to investigate\n` +
-                   `• Example: 'All the patients of Grace Hospital'\n\n` +
-                   `**ELEMENT**\n` +
-                   `• A member of the population\n` +
-                   `• If there are 100,000 employees (N=100,000), each single employee is an element\n` +
-                   `• If ALL elements are included → it's a CENSUS\n\n` +
-                   `**SAMPLING FRAME**\n` +
-                   `• The representation or list of the target population\n` +
-                   `• An operational definition of the population that provides the basis for drawing a sample\n` +
-                   `• Example: Staff Directory, customer lists, yellow pages, membership directories\n` +
-                   `• Must be as complete, accurate, and up-to-date as possible\n\n` +
-                   `**SAMPLE (n)**\n` +
-                   `• A subset of the population\n` +
-                   `• Selected members from whom data will be obtained\n` +
-                   `• Example: 3,000 patients selected (n=3,000)\n` +
-                   `• Conclusions are drawn for the population based on the sample\n\n` +
-                   `**SUBJECT / RESPONDENT**\n` +
-                   `• A single member of the sample\n` +
-                   `• Each patient of the 3,000 selected patients is a subject\n\n` +
-                   `💡 *Good sampling is VITAL for inferential studies!*`;
-        }
-        
-        // ========== SAMPLING PROCESS (5 STEPS) ==========
-        if ((q.includes("sampling process") || q.includes("steps in sampling") || q.includes("stages of sampling")) && !q.includes("technique")) {
-            return `⚙️ **The 5-Stage Sampling Process**\n\n` +
-                   `**Step 1: Define the Target Population**\n` +
-                   `• Identify and define the specific, complete group relevant to the research project\n` +
-                   `• Example: 'All the patients of Grace Hospital'\n\n` +
-                   `**Step 2: Select the Sampling Frame**\n` +
-                   `• Obtain the representation or list of all elements (names, demographics)\n` +
-                   `• Must be complete, accurate, and up-to-date\n` +
-                   `• Examples: customer lists, yellow pages, mailing lists, membership directories\n\n` +
-                   `**Step 3: Determine the Sampling Technique**\n` +
-                   `• Two broad categories: NON-PROBABILITY and PROBABILITY sampling\n` +
-                   `• Non-probability → suitable for exploratory research\n` +
-                   `• Probability → required for conclusive research (descriptive/causal)\n\n` +
-                   `**Step 4: Determine the Sample Size**\n` +
-                   `• Number of elements to be studied\n` +
-                   `• Considerations: importance of decision, nature of research, number of variables, data analysis, resource availability\n` +
-                   `• Can be determined statistically or non-statistically\n\n` +
-                   `**Step 5: Select the Sampling Units**\n` +
-                   `• Execute the sampling process\n` +
-                   `• For probability sampling: select samples randomly from sampling frame until achieving desired sample size\n\n` +
-                   `💡 *This process is crucial for conclusive research requiring probability sampling*`;
-        }
-        
-        // ========== NON-PROBABILITY SAMPLING ==========
-        if ((q.includes("non-probability") || q.includes("non probability")) && !q.includes("probability sampling")) {
-            return `📋 **Non-Probability Sampling Techniques**\n\n` +
-                   `**Definition:** Sampling techniques that do NOT use chance selection procedures. Not every element has a known chance to be selected. Based on personal judgment of the researcher.\n\n` +
-                   `**1. CONVENIENCE SAMPLING**\n` +
-                   `• Elements selected based on convenience of the researcher\n` +
-                   `• Example: Studying job satisfaction in researcher's own organization, selecting 200 employees out of 2,000 based on convenience\n` +
-                   `• Suitable for exploratory research\n\n` +
-                   `**2. JUDGMENTAL SAMPLING (Purposive Sampling)**\n` +
-                   `• Careful selection of elements that represent relevant characteristics\n` +
-                   `• Example: Selecting all full-time frontline employees because they are the most suitable respondents\n` +
-                   `• Based on researcher's expertise\n\n` +
-                   `**3. QUOTA SAMPLING**\n` +
-                   `• Allocation of quotas for various strata (proportionate to population)\n` +
-                   `• Steps:\n` +
-                   `  a) Understand composition of population\n` +
-                   `  b) Develop quotas (%) using meaningful control characteristics (gender, race, position)\n` +
-                   `  c) Ensure proportions match population\n` +
-                   `  d) Select elements based on convenience or judgment\n` +
-                   `• Example: Selecting 200 employees with gender/race quotas matching population\n\n` +
-                   `**4. SNOWBALL SAMPLING**\n` +
-                   `• Uses referrals to obtain units of analysis\n` +
-                   `• Each contact recommends additional members\n` +
-                   `• Process continues until desired sample size achieved\n` +
-                   `• Practical when NO sampling frame available\n` +
-                   `• Commonly used for studies involving sensitive/illegal activities (corruption, divorce, smoking, prostitution)\n\n` +
-                   `💡 *Non-probability sampling is commonly used for EXPLORATORY research*`;
-        }
-        
-        // ========== PROBABILITY SAMPLING ==========
-        if ((q.includes("probability sampling") || q.includes("random sampling") || q.includes("simple random") || 
-             q.includes("systematic sampling") || q.includes("stratified sampling") || q.includes("cluster sampling")) && 
-            !q.includes("non-probability")) {
-            return `🎲 **Probability Sampling Techniques**\n\n` +
-                   `**Definition:** Each and every element of the target population has a FIXED chance to be selected. Sampling units are selected by chance. Perceived as a fair process.\n\n` +
-                   `**1. SIMPLE RANDOM SAMPLING**\n` +
-                   `• Every possible combination of elements has known and EQUAL chance to be selected\n` +
-                   `• Each element selected independently\n` +
-                   `• Steps: Select sampling frame → assign serial numbers → select using random number table or computer-generated numbers\n\n` +
-                   `**2. SYSTEMATIC SAMPLING**\n` +
-                   `• Select elements at a fixed interval (i-th item) after a random start\n` +
-                   `• Sampling interval = Population size (N) ÷ Sample size (n)\n` +
-                   `• Steps: Select frame → assign numbers → calculate interval → random start → select every i-th element\n` +
-                   `• Example: If N=2000, n=200, interval = 10. Select random start (e.g., #5), then 15, 25, 35...\n\n` +
-                   `**3. STRATIFIED SAMPLING**\n` +
-                   `• Population divided into meaningful STRATA, then random samples drawn from each stratum\n` +
-                   `• Steps: Select frame → determine stratification variables → divide population into strata → assign numbers → determine sample size for each stratum (proportionate) → select samples using simple random or systematic sampling\n` +
-                   `• Ensures representation across key subgroups\n\n` +
-                   `**4. CLUSTER SAMPLING**\n` +
-                   `• Population divided into natural groups/clusters (geographical areas)\n` +
-                   `• Random sample of clusters is drawn\n` +
-                   `• Multi-stage cluster sampling: further random selection within selected clusters\n` +
-                   `• Steps: Assign numbers → divide into clusters → calculate interval → select random clusters → select units within clusters\n` +
-                   `• More cost-effective for geographically dispersed populations\n\n` +
-                   `💡 *Probability sampling is REQUIRED for conclusive research (descriptive/causal)*`;
-        }
-        
-        // ========== COMPARISON: NON-PROBABILITY VS PROBABILITY ==========
-        if ((q.includes("difference between non-probability and probability") || q.includes("non-probability vs probability") || 
-             (q.includes("when to use") && q.includes("sampling")))) {
-            return `⚖️ **Non-Probability vs Probability Sampling – When to Use Which**\n\n` +
-                   `| Factor | Non-Probability | Probability |\n` +
-                   `|--------|-----------------|-------------|\n` +
-                   `| Nature of Research | Exploratory | Conclusive (Descriptive/Causal) |\n` +
-                   `| Sampling Errors | Cannot be assessed | Can be assessed |\n` +
-                   `| Generalizability | Limited | High |\n` +
-                   `| Randomization | No | Yes |\n` +
-                   `| Representativeness | Lower | Higher |\n` +
-                   `| Cost | Lower | Higher |\n` +
-                   `| Time | Faster | Slower |\n\n` +
-                   `**Recommendations:**\n` +
-                   `• Use NON-PROBABILITY for: Exploratory research, when sampling frame unavailable, limited budget/time\n` +
-                   `• Use PROBABILITY for: Conclusive research, when inferential statistics needed, generalization required\n\n` +
-                   `**Key Considerations for Choosing:**\n` +
-                   `• If sampling errors and variability are high → Probability sampling recommended\n` +
-                   `• If inferential statistical analyses are required → Probability sampling recommended\n` +
-                   `• If exploratory and hypothesis generation → Non-probability acceptable\n\n` +
-                   `💡 *The use of appropriate sampling technique yields normally distributed data needed for inferential statistics*`;
-        }
-        
-        // ========== SAMPLE SIZE - QUALITATIVE (KREJCIE & MORGAN) ==========
-        if ((q.includes("krejcie") || q.includes("morgan") || q.includes("sample size table") || 
-             (q.includes("sample size") && (q.includes("qualitative") || q.includes("table"))))) {
-            return `📊 **Sample Size Determination – Krejcie & Morgan (1970)**\n\n` +
-                   `**Qualitative Approach – Rule of Thumb:**\n` +
-                   `This user-friendly model is commonly used for determining sample sizes, especially in exploratory research and for determining size of each stratum in stratified sampling.\n\n` +
-                   `**Suggested Sample Sizes by Population Size:**\n\n` +
-                   `| Population (N) | Sample (n) |\n` +
-                   `|---------------|------------|\n` +
-                   `| 100 | 80 |\n` +
-                   `| 500 | 217 |\n` +
-                   `| 1,000 | 278 |\n` +
-                   `| 2,000 | 322 |\n` +
-                   `| 3,000 | 341 |\n` +
-                   `| 4,000 | 351 |\n` +
-                   `| 5,000 | 357 |\n` +
-                   `| 6,000 | 361 |\n` +
-                   `| 7,000 | 364 |\n` +
-                   `| 8,000 | 367 |\n` +
-                   `| 9,000 | 368 |\n` +
-                   `| 10,000+ | 370-384 |\n\n` +
-                   `**General Guides by Research Type (Malhotra, 2010):**\n` +
-                   `• Exploratory research: Smaller sample size (30-100)\n` +
-                   `• Descriptive research: Larger sample (200-500+)\n` +
-                   `• Causal research/Experiments: 30+ per group\n` +
-                   `• Population > 500,000: ~384 samples\n\n` +
-                   `💡 *Sample size is subject to the type of statistical techniques used*`;
-        }
-        
-        // ========== SAMPLE SIZE - CONFIDENCE INTERVAL APPROACH ==========
-        if ((q.includes("confidence interval") && q.includes("sample size")) || q.includes("sample size formula") || 
-            (q.includes("calculate sample size") && (q.includes("mean") || q.includes("proportion")))) {
-            return `📐 **Sample Size Determination – Confidence Interval Approach**\n\n` +
-                   `**For MEAN:**\n\n` +
-                   `Formula: n = (z² × σ²) / D²\n\n` +
-                   `Where:\n` +
-                   `• n = required sample size\n` +
-                   `• z = z-value for desired confidence level (e.g., 1.96 for 95%)\n` +
-                   `• σ = population standard deviation (from pilot study or secondary data)\n` +
-                   `• D = precision level (maximum permissible difference)\n\n` +
-                   `**Steps:**\n` +
-                   `1. Specify level of precision (D)\n` +
-                   `2. Specify level of confidence (e.g., 95%)\n` +
-                   `3. Determine z-value (1.96 for 95%)\n` +
-                   `4. Determine population standard deviation (σ)\n` +
-                   `5. Calculate n = (z² × σ²) / D²\n\n` +
-                   `**For PROPORTION:**\n\n` +
-                   `Formula: n = (z² × p × (1-p)) / D²\n\n` +
-                   `Where:\n` +
-                   `• p = estimated population proportion\n` +
-                   `• 1-p = complement of proportion\n` +
-                   `• D = precision level\n` +
-                   `• z = z-value for confidence level\n\n` +
-                   `**Example:** For 95% confidence (z=1.96), p=0.5 (maximum variability), D=0.05 (5% precision)\n` +
-                   `n = (1.96² × 0.5 × 0.5) / 0.05² = 384.16 ≈ 384 respondents\n\n` +
-                   `💡 *This approach is based on constructing confidence intervals around sample means or proportions*`;
-        }
-        
-        // ========== SAMPLE SIZE - EFFECT SIZE METHOD ==========
-        if ((q.includes("effect size") || q.includes("alpha") || q.includes("power") || q.includes("beta") || 
-             (q.includes("sample size") && (q.includes("hypothesis") || q.includes("effect"))))) {
-            return `📊 **Sample Size Determination – Effect Size Method**\n\n` +
-                   `**Three Major Factors:**\n\n` +
-                   `**1. ALPHA (α)** – Probability of Type I Error (rejecting null when null is true)\n` +
-                   `• Commonly set at 0.05 or 0.01\n` +
-                   `• Smaller alpha requires larger sample size\n\n` +
-                   `**2. POWER** – Probability of correctly rejecting null (1 - β)\n` +
-                   `• Commonly set at 0.80 (80%) or 0.90 (90%)\n` +
-                   `• Higher power requires larger sample size\n\n` +
-                   `**3. EFFECT SIZE (ES)** – Degree of association between variables\n` +
-                   `• Small effect size = detect even small differences\n` +
-                   `• Larger effect size requires smaller sample size\n` +
-                   `• Cohen's guidelines: small=0.2, medium=0.5, large=0.8\n\n` +
-                   `**Formula for ONE sample hypothesis testing:**\n` +
-                   `n = [(Zα + Zβ) × s / ES]²\n\n` +
-                   `**Formula for TWO independent samples:**\n` +
-                   `n = 2 × [(Zα + Zβ) × s / ES]²\n\n` +
-                   `**Interpretation:**\n` +
-                   `• Alpha, power, and effect size are set by researcher PRIOR to data collection\n` +
-                   `• Minimum sample size is a function of these three parameters\n\n` +
-                   `💡 *For hypothesis testing, sample size must be sufficient to justify alpha, beta, and effect size*`;
-        }
-        
-        // ========== CONSIDERATIONS FOR SAMPLE SIZE ==========
-        if ((q.includes("sample size considerations") || q.includes("factors affecting sample size")) && !q.includes("formula")) {
-            return `📏 **Major Considerations in Sample Size Determination**\n\n` +
-                   `**1. Importance of the Decision**\n` +
-                   `• Larger and more representative sample for important decisions\n` +
-                   `• Higher stakes = larger sample size\n\n` +
-                   `**2. Nature of the Research**\n` +
-                   `• Exploratory research → smaller size\n` +
-                   `• Descriptive/Causal research → larger size\n\n` +
-                   `**3. Number of Variables**\n` +
-                   `• More variables involved → larger sample size required\n` +
-                   `• Allows for multivariate analysis\n\n` +
-                   `**4. Nature of Data Analysis**\n` +
-                   `• Detailed and sophisticated statistical analysis require larger random samples\n` +
-                   `• Factor analysis, SEM require larger samples (200-400+)\n\n` +
-                   `**5. Resource Availability**\n` +
-                   `• Budget constraints\n` +
-                   `• Time limitations\n` +
-                   `• Personnel availability\n\n` +
-                   `**6. Population Homogeneity**\n` +
-                   `• More homogeneous population → smaller sample sufficient\n` +
-                   `• More heterogeneous → larger sample needed\n\n` +
-                   `💡 *Size can be determined statistically OR non-statistically*`;
-        }
-        
-        // ========== GREETINGS ==========
-        if (q.match(/^(hi|hello|hey|gm|good morning|good afternoon|greetings)/i)) {
-            return `🎯 **Hello! Welcome to Topic 7: Sampling Assistant**\n\n` +
-                   `I'm here to help you master sampling in marketing research.\n\n` +
-                   `**📌 What I can help with:**\n` +
-                   `• 📊 Sampling Terms – Population, element, sampling frame, sample, subject\n` +
-                   `• 📋 Non-Probability Sampling – Convenience, judgmental, quota, snowball\n` +
-                   `• 🎲 Probability Sampling – Simple random, systematic, stratified, cluster\n` +
-                   `• ⚙️ Sampling Process – 5 systematic stages\n` +
-                   `• 📏 Sample Size – Qualitative (Krejcie & Morgan) & Statistical approaches\n` +
-                   `• 📐 Confidence Interval & Effect Size methods\n\n` +
-                   `What would you like to learn about today?`;
-        }
-        
-        // ========== HELP ==========
-        if (q.includes("what can you do") || q.includes("help") || q === "?" || q === "help me") {
-            return `📋 **Topic 7: Sampling – What I Can Help With**\n\n` +
-                   `**Sampling Terms:**\n` +
-                   `• Population (N), element, sampling frame, sample (n), subject/respondent\n` +
-                   `• Census vs sample\n\n` +
-                   `**Sampling Process (5 Steps):**\n` +
-                   `• Define target population → select frame → determine technique → determine size → select units\n\n` +
-                   `**Non-Probability Sampling:**\n` +
-                   `• Convenience, judgmental (purposive), quota, snowball\n\n` +
-                   `**Probability Sampling:**\n` +
-                   `• Simple random, systematic, stratified, cluster\n\n` +
-                   `**Sample Size Determination:**\n` +
-                   `• Qualitative: Krejcie & Morgan table, research type guides\n` +
-                   `• Statistical: Confidence interval approach (mean/proportion)\n` +
-                   `• Statistical: Effect size method (alpha, power, effect size)\n\n` +
-                   `**Try asking:**\n` +
-                   `• "Explain quota sampling with example"\n` +
-                   `• "How does stratified sampling work?"\n` +
-                   `• "What sample size do I need for a population of 5,000?"\n` +
-                   `• "Calculate sample size using confidence interval formula"`;
-        }
-        
-        // ========== DEFAULT ==========
-        return `📘 **Topic 7: Sampling in Marketing Research**\n\n` +
-               `I can help you understand:\n\n` +
-               `📊 **Sampling Terms** – Population (N), element, sampling frame, sample (n), subject/respondent\n` +
-               `⚙️ **Sampling Process** – 5 stages: define population → select frame → determine technique → determine size → select units\n` +
-               `📋 **Non-Probability Sampling** – Convenience, judgmental, quota, snowball (no chance selection)\n` +
-               `🎲 **Probability Sampling** – Simple random, systematic, stratified, cluster (fixed chance selection)\n` +
-               `📏 **Sample Size – Qualitative** – Krejcie & Morgan table (population to sample conversion)\n` +
-               `📐 **Sample Size – Statistical** – Confidence interval approach (mean/proportion formulas)\n` +
-               `📊 **Sample Size – Effect Size** – Alpha (α), power, effect size (ES) considerations\n` +
-               `⚖️ **When to Use What** – Non-probability for exploratory, probability for conclusive research\n\n` +
-               `**Try asking:**\n` +
-               `• "What is the difference between population and sampling frame?"\n` +
-               `• "Explain snowball sampling with example"\n` +
-               `• "How to do stratified sampling?"\n` +
-               `• "What sample size for population of 10,000?"\n` +
-               `• "Formula for sample size using proportion"\n\n` +
-               `Or click one of the suggestion chips above! 🎯`;
-    }
-    
-    // Streaming effect for typing
-    async function streamResponse(bubbleElement, fullText) {
-        bubbleElement.innerHTML = '';
-        let currentText = '';
-        
-        for (let i = 0; i < fullText.length; i++) {
-            currentText += fullText[i];
-            let formatted = currentText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>')
-                .replace(/\|/g, '•');
-            bubbleElement.innerHTML = formatted + '<span class="streaming-cursor"></span>';
-            scrollToBottom();
-            const delay = fullText[i] === '\n' ? 35 : (fullText[i] === ' ' ? 12 : 22);
-            await new Promise(r => setTimeout(r, delay));
-        }
-        bubbleElement.innerHTML = currentText
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n/g, '<br>');
-    }
-    
-    function addUserMessageToUI(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message user-message';
-        messageDiv.innerHTML = `
-            <div class="bubble user-bubble">${escapeHtml(text)}</div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-    }
-    
-    function addTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'message bot-message';
-        typingDiv.id = 'typingIndicator';
-        typingDiv.innerHTML = `
-            <div class="typing-indicator">
-                <span></span><span></span><span></span>
-                <span style="width:auto; background:transparent; margin-left:8px; color:#8f9b7a;">Thinking...</span>
-            </div>
-        `;
-        messagesDiv.appendChild(typingDiv);
-        scrollToBottom();
-    }
-    
-    function removeTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-    
-    function createStreamingMessage() {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
-        messageDiv.id = 'streamingMessage';
-        messageDiv.innerHTML = `
-            <div class="bubble bot-bubble" id="streamingBubble"></div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-        return document.getElementById('streamingBubble');
-    }
-    
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    function getTime() {
-        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
     function scrollToBottom() {
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
-    async function sendMessage() {
-        if (isThinking) return;
-        const message = userInput.value.trim();
-        if (!message) return;
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message-bubble');
+        msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'bot-msg');
+        msgDiv.innerHTML = text;
+        messagesContainer.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    function getBotAnswer(questionText) {
+        const q = questionText.toLowerCase();
         
-        isThinking = true;
-        userInput.disabled = true;
-        sendBtn.disabled = true;
+        // Sampling Terms
+        if ((q.includes('population') || q.includes('element') || q.includes('sampling frame') || q.includes('sample') || q.includes('subject')) && (q.includes('term') || q.includes('definition') || q.includes('what is'))) {
+            return `<b>📖 Key Sampling Terms</b><br><br>
+            <b>Population:</b> The entire group of people, objects, events, or things of interest that the researcher would like to investigate. Example: 'all the patients of Grace Hospital'<br><br>
+            <b>Element:</b> A member of the population. If there are 100,000 employees (N=100,000), each single employee is an element. If all elements are included → census.<br><br>
+            <b>Sampling Frame:</b> The representation or list of the target population; an operational definition of the population that provides the basis for drawing a sample. Example: Staff Directory.<br><br>
+            <b>Sample:</b> A subset of the population selected for data collection. Example: 3,000 patients (n=3,000) selected.<br><br>
+            <b>Subject/Respondent:</b> A single member of the sample. Each patient of the 3,000 selected is a subject.`;
+        }
         
-        addUserMessageToUI(message);
-        conversationHistory.push({ role: "user", content: message });
+        // Sampling Process
+        if (q.includes('sampling process') || (q.includes('steps') && q.includes('sampling'))) {
+            return `<b>🔄 The Sampling Process (5 Sequential Stages)</b><br><br>
+            <b>Step 1: Defining the target population</b> - Identify and define the specific, complete group relevant to the research project. Example: 'All the patients of Grace Hospital.'<br><br>
+            <b>Step 2: Selecting the sampling frame</b> - Obtain the list of elements from which a sample may be drawn. Must be complete, accurate, and up-to-date.<br><br>
+            <b>Step 3: Determining the sampling technique</b> - Choose between non-probability (exploratory research) and probability sampling (conclusive research).<br><br>
+            <b>Step 4: Determining the sample size</b> - Number of elements to be studied. Considerations: importance of decision, nature of research, number of variables, data analysis type, resource availability.<br><br>
+            <b>Step 5: Selecting the sampling units</b> - Execute sampling process; randomly select samples from sampling frame.`;
+        }
+        
+        // Non-Probability Sampling
+        if ((q.includes('non-probability') || q.includes('non probability')) && !q.includes('probability vs')) {
+            return `<b>🎲 Non-Probability Sampling Techniques</b><br><br>
+            Non-probability sampling techniques <b>do not use chance selection procedures</b>. Not every element has a known chance to be selected; based on personal judgment of the researcher.<br><br>
+            <b>Four types:</b><br>
+            • <b>Convenience sampling</b> - Elements selected based on researcher convenience<br>
+            • <b>Judgmental/Purposive sampling</b> - Careful selection of elements representing relevant characteristics<br>
+            • <b>Quota sampling</b> - Allocation of quotas for various strata, then convenience/judgment selection<br>
+            • <b>Snowball sampling</b> - Uses referrals to obtain units of analysis<br><br>
+            Suitable for <b>exploratory research</b>.`;
+        }
+        
+        // Probability Sampling
+        if ((q.includes('probability sampling') || (q.includes('probability') && !q.includes('non'))) && !q.includes('vs')) {
+            return `<b>🎯 Probability Sampling Techniques</b><br><br>
+            Probability sampling is a sampling procedure in which <b>each and every element of the target population has a fixed chance</b> to be selected. Sampling units are selected by chance - perceived as a fair process.<br><br>
+            <b>Four types:</b><br>
+            • <b>Simple random sampling</b> - Every possible combination has known and equal chance<br>
+            • <b>Systematic sampling</b> - Selection at fixed interval (i th item) after random start<br>
+            • <b>Stratified sampling</b> - Population divided into meaningful strata, then random samples from each<br>
+            • <b>Cluster sampling</b> - Population divided into natural groups/clusters, then random sample of clusters<br><br>
+            Required for <b>conclusive research</b> (descriptive or causal).`;
+        }
+        
+        // Convenience Sampling
+        if (q.includes('convenience sampling')) {
+            return `<b>🪑 Convenience Sampling</b><br><br>
+            A form of <b>non-probability sampling</b> procedure in which elements are selected based on the <b>convenience of the researcher</b>.<br><br>
+            <b>Example:</b> Doing an exploratory study of job satisfaction in the researcher's organization and selecting 200 employees out of 2,000 based on convenience (those easily accessible).<br><br>
+            <b>Characteristics:</b><br>
+            • Easy and inexpensive<br>
+            • Not representative of the population<br>
+            • Suitable for exploratory research only<br>
+            • Risk of selection bias`;
+        }
+        
+        // Judgmental/Purposive Sampling
+        if (q.includes('judgmental') || q.includes('purposive')) {
+            return `<b>🎯 Judgmental/Purposive Sampling</b><br><br>
+            Also known as <b>purposive sampling</b>. Involves the <b>careful selection of elements that represent relevant characteristics</b> of the target population.<br><br>
+            <b>Example:</b> Selecting all the full-time frontline employees because they are believed to be the most suitable respondents for a study on service quality.<br><br>
+            <b>Characteristics:</b><br>
+            • Based on researcher's judgment<br>
+            • Targets specific characteristics<br>
+            • Useful when only certain types of people can provide needed information<br>
+            • Risk of researcher bias`;
+        }
+        
+        // Quota Sampling
+        if (q.includes('quota sampling')) {
+            return `<b>📊 Quota Sampling</b><br><br>
+            Involves the <b>allocation of quotas of cases for various strata</b> or mutually exclusive groups (normally proportionate to representation in the target population).<br><br>
+            <b>Steps:</b><br>
+            1. Understand the composition of the population<br>
+            2. Develop quotas (normally in %) using meaningful control characteristic(s)<br>
+            3. Quotas ensure proportions of sample elements are proportionate to those of the population<br>
+            4. Sample elements are selected based on convenience or judgment<br><br>
+            <b>Example:</b> Selecting 200 employees with quotas based on gender (50% male, 50% female) and race (60% Malay, 25% Chinese, 15% Indian).`;
+        }
+        
+        // Snowball Sampling
+        if (q.includes('snowball')) {
+            return `<b>⛄ Snowball Sampling</b><br><br>
+            Uses <b>referrals to obtain the units of analysis</b>. Each contact is asked to recommend or identify additional members of the target population, who then name others, and so on.<br><br>
+            <b>Process:</b> Continues until desired sample size is achieved.<br><br>
+            <b>Best used when:</b><br>
+            • No sampling frame is available<br>
+            • Studies involving sensitive or illegal activities like corruption, divorce, smoking, and prostitution<br><br>
+            <b>Characteristics:</b><br>
+            • Practical when population is hard to reach<br>
+            • Chain referral method<br>
+            • Risk of bias (similar people refer similar people)`;
+        }
+        
+        // Simple Random Sampling
+        if (q.includes('simple random')) {
+            return `<b>🎲 Simple Random Sampling</b><br><br>
+            A probability sampling procedure in which <b>every possible combination of elements has a known and equal chance to be selected</b>. Each element is selected independently.<br><br>
+            <b>Steps (assuming sample size = 200):</b><br>
+            1. Select the sampling frame<br>
+            2. Assign serial numbers to all elements<br>
+            3. Select sampling units using a random number table or computer-generated numbers<br>
+            4. For random number table: select appropriate digits (≤ N), select numbers until 200 different numbers are selected<br><br>
+            <b>Advantages:</b> Fair, unbiased, easy to understand<br>
+            <b>Disadvantages:</b> Requires complete sampling frame, can be time-consuming for large populations`;
+        }
+        
+        // Systematic Sampling
+        if (q.includes('systematic sampling')) {
+            return `<b>📏 Systematic Sampling</b><br><br>
+            Sampling units are selected from the sampling frame at a <b>fixed interval (the i th item) after a random start</b>.<br><br>
+            <b>Steps:</b><br>
+            1. Select the sampling frame<br>
+            2. Assign serial numbers to all elements<br>
+            3. Calculate sampling interval: <b>i = N/n</b> (population size / sample size). Make it a whole number.<br>
+            4. Randomly select first number from sampling frame (e.g., 0480)<br>
+            5. Second number = first number + i. Continue until sample size achieved<br><br>
+            <b>Example:</b> If N=2000, n=200, then i=10. Random start=0480, then select 0490, 0500, etc.`;
+        }
+        
+        // Stratified Sampling
+        if (q.includes('stratified')) {
+            return `<b>📐 Stratified Sampling</b><br><br>
+            A probability sampling procedure in which the population is first <b>divided into meaningful strata</b> and independent random samples are then drawn from each stratum.<br><br>
+            <b>Steps:</b><br>
+            1. Select the sampling frame<br>
+            2. Determine variables for stratification and number of strata needed<br>
+            3. Divide target population into strata<br>
+            4. Assign serial numbers to all elements in each stratum<br>
+            5. Determine sample size (normally proportionate) for each stratum<br>
+            6. In each stratum, select samples using simple random or systematic sampling<br><br>
+            <b>Advantage:</b> Ensures representation of all subgroups, reduces sampling error.`;
+        }
+        
+        // Cluster Sampling
+        if (q.includes('cluster')) {
+            return `<b>🗺️ Cluster Sampling</b><br><br>
+            Population is first divided into <b>natural groups or geographical areas (clusters)</b> and then a random sample of clusters is drawn.<br><br>
+            <b>Two-stage cluster sampling steps:</b><br>
+            1. Assign serial numbers to all elements<br>
+            2. Divide population into clusters<br>
+            3. Calculate sample interval<br>
+            4. Select a random number<br>
+            5. Identify the elements<br>
+            6. Select clusters which contain these elements<br>
+            7. Select sampling units randomly within each selected cluster<br><br>
+            <b>Advantage:</b> Cost-effective for geographically dispersed populations<br>
+            <b>Disadvantage:</b> Higher sampling error than simple random sampling`;
+        }
+        
+        // Sample Size Qualitative
+        if ((q.includes('sample size') && (q.includes('qualitative') || q.includes('krecjie') || q.includes('morgan') || q.includes('rule of thumb'))) || (q.includes('determine sample size') && !q.includes('confidence'))) {
+            return `<b>📏 Sample Size Determination - Qualitative Approach</b><br><br>
+            <b>Krejcie and Morgan (1970) Table:</b> A commonly used rule of thumb for determining sample sizes, especially in exploratory research.<br><br>
+            <b>Examples from the table:</b><br>
+            • Population 100 → Sample size 80<br>
+            • Population 500 → Sample size 217<br>
+            • Population 1,000 → Sample size 278<br>
+            • Population 5,000 → Sample size 357<br>
+            • Population 10,000 → Sample size 370<br>
+            • Population 100,000+ → Sample size 384<br><br>
+            <b>General guides (Malhotra, 2010):</b><br>
+            • Exploratory research: Small samples (dozens to hundreds)<br>
+            • Descriptive research: Larger samples (hundreds to thousands)<br>
+            • Conclusive research: Probability sampling required`;
+        }
+        
+        // Confidence Interval Approach
+        if ((q.includes('confidence interval') || q.includes('sample size formula')) && !q.includes('alpha')) {
+            return `<b>📊 Sample Size Determination - Confidence Interval Approach</b><br><br>
+            <b>For Means:</b><br>
+            Formula: n = (z² × σ²) / D²<br>
+            Where: n = sample size, z = z-value (1.96 for 95% confidence), σ = population standard deviation, D = level of precision (max permissible difference)<br><br>
+            <b>Steps:</b><br>
+            1. Specify level of precision (D)<br>
+            2. Specify level of confidence (e.g., 95%)<br>
+            3. Determine z-value from table (1.96 for 95%)<br>
+            4. Determine standard deviation of population<br>
+            5. Calculate sample size<br><br>
+            <b>For Proportions:</b><br>
+            Formula: n = (z² × p × (1-p)) / D²<br>
+            Where: p = estimated population proportion`;
+        }
+        
+        // Alpha, Power, Effect Size
+        if (q.includes('alpha') || q.includes('power') || q.includes('effect size') || (q.includes('type i') || q.includes('type ii'))) {
+            return `<b>⚡ Alpha, Power, and Effect Size</b><br><br>
+            <b>Alpha (α):</b> Probability of rejecting the Null when the Null is indeed true (Type I error). Typically set at 0.05 or 0.01.<br><br>
+            <b>Power (1-β):</b> Probability of correctly rejecting the Null. Power should be high (typically 0.80 or higher). Beta (β) is Type II error.<br><br>
+            <b>Effect Size (ES):</b> Degree of association between variables or magnitude of difference. Small effect size allows detection of even small effects.<br><br>
+            <b>Sample size formula (one sample):</b><br>
+            N = [(Zα + Zβ)s / ES]²<br><br>
+            <b>For two independent samples:</b><br>
+            N = 2[(Zα + Zβ)s / ES]²<br><br>
+            <b>Key relationship:</b> As effect size decreases, required sample size increases.`;
+        }
+        
+        // Probability vs Non-Probability
+        if ((q.includes('difference between') && (q.includes('probability') && q.includes('non'))) || (q.includes('vs') && q.includes('sampling'))) {
+            return `<b>⚖️ Probability vs Non-Probability Sampling</b><br><br>
+            <b>Non-Probability Sampling:</b><br>
+            • No chance selection procedures<br>
+            • Elements do NOT have known chance to be selected<br>
+            • Based on researcher's judgment<br>
+            • Suitable for <b>exploratory research</b><br>
+            • Types: Convenience, Judgmental, Quota, Snowball<br><br>
+            <b>Probability Sampling:</b><br>
+            • Each element has fixed chance to be selected<br>
+            • Sampling units selected by chance (fair process)<br>
+            • Required for <b>conclusive research</b> (descriptive/causal)<br>
+            • Types: Simple Random, Systematic, Stratified, Cluster<br><br>
+            <b>Considerations:</b> If sampling errors are high and inferential statistics needed → use probability sampling.`;
+        }
+        
+        // Default
+        return `<b>📘 Topic 7: Sampling Design and Procedures</b><br><br>
+        Based on your lecture notes, I can help you with:<br><br>
+        📖 <b>Sampling Terms</b> - Population, element, sampling frame, sample, subject<br>
+        🔄 <b>Sampling Process</b> - 5 sequential stages (Define population → Select frame → Determine technique → Determine size → Select units)<br>
+        🎲 <b>Non-Probability Sampling</b> - Convenience, judgmental, quota, snowball<br>
+        🎯 <b>Probability Sampling</b> - Simple random, systematic, stratified, cluster<br>
+        🪑 <b>Convenience Sampling</b> - Based on researcher convenience<br>
+        🎯 <b>Judgmental Sampling</b> - Based on researcher judgment<br>
+        📊 <b>Quota Sampling</b> - Allocation of quotas for strata<br>
+        ⛄ <b>Snowball Sampling</b> - Referrals to obtain units<br>
+        🎲 <b>Simple Random</b> - Equal chance for every element<br>
+        📏 <b>Systematic Sampling</b> - Fixed interval selection<br>
+        📐 <b>Stratified Sampling</b> - Divide into strata, then random<br>
+        🗺️ <b>Cluster Sampling</b> - Natural groups/clusters<br>
+        📏 <b>Sample Size</b> - Krejcie & Morgan table, qualitative factors<br>
+        📊 <b>Confidence Interval</b> - For means and proportions<br>
+        ⚡ <b>Alpha, Power, Effect Size</b> - Statistical approach<br><br>
+        Try asking: <i>"What is the difference between probability and non-probability sampling?"</i> or <i>"Explain stratified sampling"</i>`;
+    }
+
+    function escapeHtmlSimple(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function handleSend() {
+        let query = userInput.value.trim();
+        if (query === "") return;
+        
+        appendMessage(escapeHtmlSimple(query), 'user');
         userInput.value = '';
         
-        addTypingIndicator();
-        await new Promise(r => setTimeout(r, 250 + Math.random() * 250));
-        
-        const response = getSmartResponse(message, conversationHistory);
-        
-        removeTypingIndicator();
-        
-        const bubbleElement = createStreamingMessage();
-        await streamResponse(bubbleElement, response);
-        
-        conversationHistory.push({ role: "assistant", content: response });
-        
-        const streamingDiv = document.getElementById('streamingMessage');
-        if (streamingDiv) streamingDiv.removeAttribute('id');
-        
-        isThinking = false;
-        userInput.disabled = false;
-        sendBtn.disabled = false;
-        userInput.focus();
+        const answerHtml = getBotAnswer(query);
+        appendMessage(answerHtml, 'bot');
     }
     
-    clearChatBtn.addEventListener('click', () => {
-        conversationHistory = [];
-        messagesDiv.innerHTML = '';
-        const welcomeDiv = document.createElement('div');
-        welcomeDiv.className = 'message bot-message';
-        welcomeDiv.innerHTML = `
-            <div class="bubble bot-bubble">
-                🧹 Chat cleared! I'm ready to help with Topic 7: Sampling.<br><br>
-                Ask me about sampling terms, non-probability/probability sampling techniques, the sampling process, or sample size determination using Krejcie & Morgan or statistical formulas!
-            </div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(welcomeDiv);
-        scrollToBottom();
-    });
-    
-    sendBtn.addEventListener('click', sendMessage);
+    sendButton.addEventListener('click', handleSend);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !isThinking && userInput.value.trim()) {
-            sendMessage();
-        }
+        if (e.key === 'Enter') handleSend();
     });
     
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    const topicChips = document.querySelectorAll('.topic-chip');
+    topicChips.forEach(chip => {
         chip.addEventListener('click', () => {
-            if (isThinking) return;
-            userInput.value = chip.textContent;
-            sendMessage();
+            const preQuestion = chip.getAttribute('data-question');
+            if (preQuestion) {
+                appendMessage(preQuestion, 'user');
+                const botAns = getBotAnswer(preQuestion);
+                appendMessage(botAns, 'bot');
+            }
         });
     });
     
-    userInput.focus();
+    window.addEventListener('load', () => {
+        scrollToBottom();
+    });
 </script>
 </body>
 </html>
