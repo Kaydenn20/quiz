@@ -1,867 +1,599 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Topic 3: Approach Development | Marketing Research Assistant</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 3: Developing Approach & Literature Review | Chatbot</title>
 
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
-            background: #f5f7f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        .chat-container {
-            width: 100%;
-            max-width: 750px;
-            height: 90vh;
-            min-height: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 8px 30px rgba(0, 0,  0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #e8ece0;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .chat-header {
-            background: #2e7d32;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1b5e20;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar {
-            width: 42px;
-            height: 42px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #2e7d32;
-        }
-        .header-info h2 {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .header-info p {
-            color: #c8e6c9;
-            font-size: 0.7rem;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            color: white;
-        }
-        .clear-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-            transition: all 0.2s;
-        }
-        .clear-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            background: #ffffff;
-        }
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f0f2e8;
-            border-radius: 10px;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #bdc9a4;
-            border-radius: 10px;
-        }
+.chat-app {
+    width: 100%;
+    max-width: 1300px;
+    height: 90vh;
+    background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+    display: flex;
+    overflow: hidden;
+}
 
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .user-message { align-self: flex-end; }
-        .bot-message { align-self: flex-start; }
+.side-panel {
+    width: 290px;
+    background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
+    padding: 28px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-        .bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            word-wrap: break-word;
-        }
-        .user-bubble {
-            background: #2e7d32;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        .bot-bubble {
-            background: #f0f2e8;
-            color: #1a2e1f;
-            border-bottom-left-radius: 4px;
-        }
-        .message-time {
-            font-size: 0.65rem;
-            margin-top: 6px;
-            color: #8f9b7a;
-            padding-left: 12px;
-        }
+.side-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.side-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
 
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 10px 16px;
-            background: #f0f2e8;
-            border-radius: 20px;
-            width: fit-content;
-        }
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #2e7d32;
-            border-radius: 50%;
-            animation: blink 1.3s infinite ease-in-out;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8);}
-            30% { opacity: 1; transform: scale(1.2);}
-        }
+.brand {
+    margin-bottom: 28px;
+    flex-shrink: 0;
+}
 
-        .streaming-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.1em;
-            background-color: #2e7d32;
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blinkCursor 1s step-end infinite;
-        }
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+.brand h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-        .chat-input-area {
-            background: #ffffff;
-            padding: 16px;
-            border-top: 1px solid #e8ece0;
-        }
-        .input-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            background: #f8faf3;
-            border: 1px solid #d4dbc8;
-            border-radius: 28px;
-            padding: 4px 6px 4px 18px;
-            transition: all 0.2s;
-        }
-        .input-wrapper:focus-within {
-            border-color: #2e7d32;
-            box-shadow: 0 0 0 2px rgba(46,125,50,0.1);
-        }
-        .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 12px 0;
-            color: #1a2e1f;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .input-wrapper input::placeholder {
-            color: #b0bba0;
-        }
-        .input-wrapper button {
-            background: #2e7d32;
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .input-wrapper button:hover:not(:disabled) {
-            background: #1b5e20;
-            transform: scale(1.02);
-        }
-        .input-wrapper button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+.brand p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 6px;
+}
 
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .suggestion-chip {
-            background: #f0f2e8;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #2e7d32;
-            font-weight: 500;
-            border: 1px solid #d4dbc8;
-        }
-        .suggestion-chip:hover {
-            background: #2e7d32;
-            color: white;
-            border-color: #2e7d32;
-        }
+.topic-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 
-        .footer {
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 8px;
-            color: #b0bba0;
-            background: #ffffff;
-            border-top: 1px solid #e8ece0;
-        }
-        
-        .bot-bubble strong {
-            color: #2e7d32;
-        }
-        
-        .bot-bubble a {
-            color: #2e7d32;
-        }
-    </style>
+.topic-section h4 {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+.topic-list::-webkit-scrollbar {
+    width: 4px;
+}
+.topic-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.topic-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
+
+.topic-chip {
+    background: rgba(255,255,255,0.12);
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.topic-chip:hover {
+    background: #ffffff;
+    color: #1a3c2c;
+    transform: translateX(4px);
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fefefe;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid #e9edf2;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2e3a;
+}
+
+.chat-header span {
+    font-size: 0.75rem;
+    color: #5c6f87;
+}
+
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fafcff;
+}
+
+.messages-area::-webkit-scrollbar {
+    width: 6px;
+}
+.messages-area::-webkit-scrollbar-track {
+    background: #eef2f8;
+    border-radius: 8px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+    background: #b9c8b2;
+    border-radius: 8px;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 24px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.bot-msg {
+    background: #f0f4f9;
+    border: 1px solid #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    color: #1e2a3a;
+}
+
+.user-msg {
+    background: #1a5d3c;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.input-row {
+    padding: 16px 24px 24px 24px;
+    border-top: 1px solid #eef2f8;
+    background: white;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 60px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-row input:focus {
+    border-color: #1a5d3c;
+    box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
+}
+
+.input-row button {
+    background: #1a5d3c;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-row button:hover {
+    background: #0e3f28;
+}
+
+@media (max-width: 700px) {
+    .side-panel { display: none; }
+    .message-bubble { max-width: 90%; }
+}
+</style>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="header-left">
-            <div class="avatar">📚</div>
-            <div class="header-info">
-                <h2>Topic 3: Approach Development Assistant</h2>
-                <p>Problem Statement • Objectives • Framework • Hypotheses • Literature Review</p>
-            </div>
+
+<div class="chat-app">
+    <div class="side-panel">
+        <div class="brand">
+            <h2>📊 Marketing Research<br>& Analytics AI</h2>
+            <p>Topic 3: Developing the Approach & Literature Review</p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <div class="badge">Learning Activities</div>
-            <button id="clearChatBtn" class="clear-btn">Clear</button>
+        <div class="topic-section">
+            <h4>📚 TOPIC 3: KEY CONCEPTS</h4>
+            <div class="topic-list">
+                <div class="topic-chip" data-question="What is a problem statement? How to write it?">📝 Problem Statement</div>
+                <div class="topic-chip" data-question="What are research questions? Give examples">❓ Research Questions</div>
+                <div class="topic-chip" data-question="What are research objectives? How to write them?">🎯 Research Objectives</div>
+                <div class="topic-chip" data-question="What is a theoretical framework?">🏗️ Theoretical Framework</div>
+                <div class="topic-chip" data-question="What are variables? Independent, dependent, moderating, intervening">📊 Types of Variables</div>
+                <div class="topic-chip" data-question="What is a hypothesis? How to develop hypotheses?">🔬 Hypotheses Development</div>
+                <div class="topic-chip" data-question="What is literature review and why is it important?">📖 Importance of Literature Review</div>
+                <div class="topic-chip" data-question="What are the reasons for doing a literature review?">✅ Reasons for Literature Review</div>
+                <div class="topic-chip" data-question="What are the key requirements of a good literature review?">✨ Requirements of Good Lit Review</div>
+                <div class="topic-chip" data-question="Dos and Don'ts of writing a literature review">✅❌ Dos and Don'ts of Lit Review</div>
+                <div class="topic-chip" data-question="What are the steps in conducting a literature review?">📋 Steps in Literature Review</div>
+                <div class="topic-chip" data-question="What is referencing? APA vs Harvard format">📚 Referencing (APA & Harvard)</div>
+                <div class="topic-chip" data-question="How to cite references in text? Examples">✍️ In-Text Citation Examples</div>
+                <div class="topic-chip" data-question="What is the difference between reference and bibliography?">📑 Reference vs Bibliography</div>
+                <div class="topic-chip" data-question="What is a hypothesis? Null vs Alternative hypothesis">🔬 Null vs Alternative Hypothesis</div>
+            </div>
         </div>
     </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="bubble bot-bubble">
-                📚 <strong>Welcome to Topic 3: Developing the Approach to the Problem!</strong><br><br>
-                I'm here to help you master the critical components of marketing research approach development.<br><br>
-                <strong>📌 Learning Outcomes Covered:</strong><br><br>
-                ✅ <strong>Problem Statement</strong> – Write clearly and precisely<br>
-                ✅ <strong>Research Questions & Objectives</strong> – Develop relevant ones<br>
-                ✅ <strong>Theoretical Framework & Hypotheses</strong> – Draw and develop<br>
-                ✅ <strong>Literature Review</strong> – Know importance and perform well<br>
-                ✅ <strong>Citation & Referencing</strong> – Do correctly (APA/Harvard)<br><br>
-                <strong>🔍 What I can help with:</strong><br>
-                • Problem statement examples and writing tips<br>
-                • Research questions (What, Why, How)<br>
-                • Research objectives (explore, describe, examine)<br>
-                • Variables (IV, DV, moderating, intervening)<br>
-                • Hypothesis development (null vs alternative)<br>
-                • Literature review steps and best practices<br>
-                • APA/Harvard referencing formats<br>
-                • Do's and Don'ts of literature review<br><br>
-                Just type your question below or click a suggestion! 🎯
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3>🎯 Topic 3: Developing the Approach & Literature Review</h3>
+            <span>Based on your complete lecture notes | Problem Statement | Variables | Hypotheses | Referencing</span>
+        </div>
+        <div class="messages-area" id="chatMessages">
+            <div class="message-bubble bot-msg">
+                👋 <strong>Welcome to Topic 3!</strong> I'm your Marketing Research AI for <strong>Developing the Approach to the Problem and Literature Review</strong>.<br><br>
+                📖 Based on your lecture notes, I can teach you about:<br>
+                • <strong>Problem Statement</strong> - How to write it clearly and precisely<br>
+                • <strong>Research Questions & Objectives</strong><br>
+                • <strong>Theoretical Framework</strong> and <strong>Variables</strong> (IV, DV, MV, InterV)<br>
+                • <strong>Hypotheses Development</strong> (Null vs Alternative)<br>
+                • <strong>Literature Review</strong> - Importance, steps, dos and don'ts<br>
+                • <strong>Referencing</strong> - APA and Harvard formats, in-text citations<br><br>
+                Ask me anything from Topic 3, or click any topic on the left!
             </div>
-            <div class="message-time">Just now</div>
         </div>
-    </div>
-
-    <div class="chat-input-area">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ask about problem statement, research objectives, hypotheses, literature review..." autocomplete="off">
-            <button id="sendBtn">➤</button>
+        <div class="input-row">
+            <input type="text" id="userQuery" placeholder="e.g., What is a problem statement? or How to write hypotheses?..." autocomplete="off">
+            <button id="sendBtn">Send →</button>
         </div>
-        <div class="suggestions" id="suggestionsPanel">
-            <div class="suggestion-chip">What is a problem statement? Give examples</div>
-            <div class="suggestion-chip">How to write research objectives?</div>
-            <div class="suggestion-chip">Types of variables (IV, DV, moderating, intervening)</div>
-            <div class="suggestion-chip">How to develop hypotheses? (null vs alternative)</div>
-            <div class="suggestion-chip">Why is literature review important?</div>
-            <div class="suggestion-chip">Steps in conducting a literature review</div>
-            <div class="suggestion-chip">APA referencing format examples</div>
-            <div class="suggestion-chip">Do's and Don'ts of literature review</div>
-        </div>
-        <div class="footer">💡 Based on your Topic 3 module • Problem Statement • Hypotheses • Literature Review • APA Format</div>
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // TOPIC 3: DEVELOPING THE APPROACH TO THE PROBLEM
-    // Based on complete module content: Problem Statement, Research Objectives,
-    // Theoretical Framework, Hypotheses, Literature Review, Referencing
-    // ============================================================
-    
-    let conversationHistory = [];
-    let isThinking = false;
+    const messagesContainer = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userQuery');
+    const sendButton = document.getElementById('sendBtn');
 
-    const messagesDiv = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-
-    function getSmartResponse(userMessage, history) {
-        const q = userMessage.toLowerCase().trim();
-        
-        // ========== PROBLEM STATEMENT ==========
-        if ((q.includes("problem statement") || q.includes("what is a problem statement")) && !q.includes("objectives")) {
-            return `📝 **Problem Statement – Clear and Precise Statement**\n\n` +
-                   `**Definition (Sekaran & Bougie, 2013):**\n` +
-                   `A clear and precise statement of the question or issue that is to be investigated with the goal of finding an answer or solution.\n\n` +
-                   `**A problem statement can pertain to:**\n` +
-                   `• Existing problem(s) where a solution is needed to solve the 'trouble'\n` +
-                   `• Situation(s) with opportunities to be tapped or improvements to be made\n` +
-                   `• Area(s) where some conceptual clarity is required\n` +
-                   `• Situation(s) where empirical investigations are required\n\n` +
-                   `**Example 1 (Grace Hospital):**\n` +
-                   `"Grace Hospital is experiencing a sharp increase in patient complaints... The management needs reliable information on the programme's effectiveness and its impact on patient satisfaction and loyalty."\n\n` +
-                   `**Example 2 (Joyous Food):**\n` +
-                   `"Customer service excellence is believed to be its competitive advantage... its determinants and consequences need to be investigated."\n\n` +
-                   `**Example 3 (Banking Industry):**\n` +
-                   `"The nature and determinants of job satisfaction for employees of retail banks in Malaysia have not been comprehensively determined."\n\n` +
-                   `💡 *A good problem statement includes both management decision problem and research problem components*`;
-        }
-        
-        // ========== RESEARCH QUESTIONS ==========
-        if (q.includes("research question") || (q.includes("what") && q.includes("why") && q.includes("how")) || q.includes("research questions format")) {
-            return `❓ **Research Questions – Refined Statements of Problem Components**\n\n` +
-                   `**Purpose:**\n` +
-                   `• Ask what specific information is required with respect to the problem's components\n` +
-                   `• Guide the researcher throughout the entire investigation\n\n` +
-                   `**Key Question Starters:**\n` +
-                   `• WHAT …? (e.g., What are the dimensions of service quality?)\n` +
-                   `• WHY …? (e.g., Why do customers prefer certain brands?)\n` +
-                   `• HOW …? (e.g., How does service quality affect loyalty?)\n\n` +
-                   `**Example from Grace Hospital:**\n` +
-                   `• What are the dimensions of hospital service quality from the patient's perspective?\n` +
-                   `• How does patient-perceived service quality affect patient satisfaction and loyalty?\n\n` +
-                   `**Example from Joyous Food:**\n` +
-                   `• What are the determinants of service satisfaction?\n` +
-                   `• How does service satisfaction affect customer relationship management?\n\n` +
-                   `💡 *When questions are answered by research, the information obtained is valuable to decision makers*`;
-        }
-        
-        // ========== RESEARCH OBJECTIVES ==========
-        if (q.includes("research objectives") || q.includes("purpose of research") || q.includes("broad purposes of research")) {
-            return `🎯 **Research Objectives – The Lighthouse for Research**\n\n` +
-                   `**Three Broad Purposes of Research:**\n\n` +
-                   `**1. To EXPLORE** – Familiarize with phenomenon, gain insights and understanding\n` +
-                   `**2. To DESCRIBE** – Describe phenomenon or variables as complete and precise as possible\n` +
-                   `**3. To EXAMINE & TEST** – Examine and test relationships between/among variables\n\n` +
-                   `**Examples from Grace Hospital:**\n` +
-                   `• To identify the dimensions of hospital service quality for Grace Hospital.\n` +
-                   `• To examine the effects of hospital service quality on patient satisfaction and loyalty.\n\n` +
-                   `**Writing Tips:**\n` +
-                   `• Use action verbs: identify, examine, determine, investigate, analyze, evaluate\n` +
-                   `• Align with the purpose of your study\n` +
-                   `• Be specific and measurable\n` +
-                   `💡 *Research objectives serve as a guide until completion of the research project*`;
-        }
-        
-        // ========== VARIABLES (IV, DV, MODERATING, INTERVENING) ==========
-        if ((q.includes("variables") || q.includes("independent variable") || q.includes("dependent variable") || 
-             q.includes("moderating variable") || q.includes("intervening variable")) && !q.includes("literature")) {
-            return `📊 **Types of Variables in Theoretical Framework**\n\n` +
-                   `**1. INDEPENDENT VARIABLE (Predictor)**\n` +
-                   `• Influences the dependent variable, positively or negatively\n` +
-                   `• Variance in DV is due to IV\n` +
-                   `• Example: Hospital service quality\n\n` +
-                   `**2. DEPENDENT VARIABLE (Criterion)**\n` +
-                   `• Variable of primary interest to the researcher\n` +
-                   `• Its value depends on the independent variable(s)\n` +
-                   `• Example: Patient loyalty\n\n` +
-                   `**3. MODERATING VARIABLE**\n` +
-                   `• Exerts a contingent effect on the IV-DV relationship\n` +
-                   `• Can enhance or weaken the original relationship\n` +
-                   `• Example: Patient demographic variables (gender, age)\n\n` +
-                   `**4. INTERVENING VARIABLE (Mediating)**\n` +
-                   `• Exerts influence across time between IV and DV\n` +
-                   `• Explains the process or mechanism\n` +
-                   `• Example: Patient satisfaction (between service quality and loyalty)\n\n` +
-                   `**Example Relationship:**\n` +
-                   `Patient Loyalty (DV) ← affected by ← Hospital Service Quality (IV)\n` +
-                   `Patient Demographics (Moderator) changes the effect\n` +
-                   `Patient Satisfaction (Intervening) transfers the effect over time\n\n` +
-                   `💡 *Variables are characteristics that vary across times, places, or situations*`;
-        }
-        
-        // ========== HYPOTHESES DEVELOPMENT ==========
-        if (q.includes("hypothesis") || q.includes("null hypothesis") || q.includes("alternative hypothesis") || 
-            q.includes("h1") || q.includes("ho") || q.includes("directional") || q.includes("non-directional")) {
-            return `🔬 **Hypothesis Development – Testable Declarative Statements**\n\n` +
-                   `**Definition:** A hypothesis is a declarative statement that is testable, specifying a relationship between two or more variables in statistically testable form.\n\n` +
-                   `**Null Hypothesis (H₀) – Status Quo:**\n` +
-                   `• Uses: 'no', 'the same', 'equals to', 'more than or equals to', 'less than or equals to'\n` +
-                   `• Example: H₀: There is NO relationship between service quality and patient satisfaction.\n\n` +
-                   `**Alternative Hypothesis (Hₐ) – Opposite:**\n` +
-                   `• What the researcher wants to support\n` +
-                   `• Example: Hₐ: There is a significant relationship between service quality and patient satisfaction.\n\n` +
-                   `**Formats:**\n` +
-                   `• If-Then: "If service quality is high, then patients will be loyal"\n` +
-                   `• Directional (one-tailed): H₀: μ ≤ 4.0, Hₐ: μ > 4.0\n` +
-                   `• Non-directional (two-tailed): H₀: μ = 4.0, Hₐ: μ ≠ 4.0\n\n` +
-                   `**Examples:**\n` +
-                   `H₁₀: There is no relationship between service quality and patient satisfaction.\n` +
-                   `H₁ₐ: There is a significant relationship between service quality and patient satisfaction.\n` +
-                   `H₂₀: Patient's gender does not influence the relationship.\n` +
-                   `H₂ₐ: Patient's gender significantly influences the relationship.\n\n` +
-                   `💡 *In marketing, H₀ is formulated so its rejection leads to acceptance of desired conclusion*`;
-        }
-        
-        // ========== THEORETICAL FRAMEWORK ==========
-        if (q.includes("theoretical framework") || q.includes("conceptual framework") || q.includes("schematic diagram")) {
-            return `🏗️ **Theoretical Framework – Schematic Diagram of Variables**\n\n` +
-                   `**Definition:**\n` +
-                   `A theoretical framework illustrates the variables involved in the study as well as their relationships.\n\n` +
-                   `**Development Process:**\n` +
-                   `1. Good literature review → Identify appropriate variables\n` +
-                   `2. Theorize logical relationships\n` +
-                   `3. Draw framework showing connections\n` +
-                   `4. Develop testable hypotheses from framework\n\n` +
-                   `**Example Framework Components:**\n` +
-                   `Independent Variable (Service Quality) → Intervening Variable (Patient Satisfaction) → Dependent Variable (Patient Loyalty)\n` +
-                   `                                          ↑\n` +
-                   `                               Moderating Variable (Patient Demographics)\n\n` +
-                   `**Key Elements to Include:**\n` +
-                   `• All relevant variables (IV, DV, moderating, intervening)\n` +
-                   `• Direction of relationships (+, -, or ?)\n` +
-                   `• Logical flow from causes to effects\n\n` +
-                   `💡 *A good theoretical framework provides the foundation for hypothesis development*`;
-        }
-        
-        // ========== IMPORTANCE OF LITERATURE REVIEW ==========
-        if ((q.includes("importance of literature review") || q.includes("why literature review") || q.includes("purpose of literature review")) && !q.includes("steps")) {
-            return `📖 **Importance & Role of Literature Review**\n\n` +
-                   `**Definition:** Report of comprehensive review of published/unpublished work in areas of specific interest.\n\n` +
-                   `**Why Literature Review is CRUCIAL:**\n\n` +
-                   `**1. Avoid ignoring important variables** – Ensures no critical variables are overlooked\n\n` +
-                   `**2. Highlight important variables** – Especially from latest refereed journals and landmark articles\n\n` +
-                   `**3. Help design methodology** – Provides tips for data collection techniques\n\n` +
-                   `**4. Prevent reinventing the wheel** – Saves time and effort on already researched topics\n\n` +
-                   `**5. Basis of qualitative research** – Demonstrates systematic tracing of subject matter origins\n\n` +
-                   `**6. Facilitates creative integration** – Provides blueprint/framework for research\n\n` +
-                   `**Main Types of Literature:**\n` +
-                   `• Books, refereed journal articles, quality research reports\n` +
-                   `• Postgraduate dissertations/theses\n` +
-                   `• Published conference proceedings and monographs\n\n` +
-                   `💡 *A literature review is NOT just a list – it is a CRITIQUE focused on directly relevant resources*`;
-        }
-        
-        // ========== STEPS IN LITERATURE REVIEW ==========
-        if (q.includes("steps in literature review") || q.includes("how to do literature review") || q.includes("conduct literature review")) {
-            return `📝 **7 Steps for Conducting a Literature Review**\n\n` +
-                   `**Step 1: Identify a Working Topic**\n` +
-                   `• Focus on specific area of study\n` +
-                   `• Know what you want to search for\n\n` +
-                   `**Step 2: Review Related Literature**\n` +
-                   `• Use keywords from your topic\n` +
-                   `• Search online databases (refereed journals)\n` +
-                   `• Browse reference lists of recent articles\n\n` +
-                   `**Step 3: Focus on Specific Topics**\n` +
-                   `• Select really relevant journal articles\n` +
-                   `• Use constructs from professional authors\n\n` +
-                   `**Step 4: Read and Evaluate Articles**\n` +
-                   `• Understand methodology, testing procedures\n` +
-                   `• Evaluate and synthesize findings\n\n` +
-                   `**Step 5: Organize and Write Annotated Bibliography**\n` +
-                   `• Document what you've read systematically\n` +
-                   `• Track important trends and theories\n\n` +
-                   `**Step 6: Organize Writing Based on Findings**\n` +
-                   `• Develop headings and subheadings\n` +
-                   `• Sort findings into major categories\n\n` +
-                   `**Step 7: Produce a Critique**\n` +
-                   `• NOT just describing – be analytical\n` +
-                   `• Identify patterns and knowledge gaps\n\n` +
-                   `💡 *A good literature review is systematic, continuous, and requires extensive searching, reading, understanding, and writing*`;
-        }
-        
-        // ========== DO'S AND DON'TS OF LITERATURE REVIEW ==========
-        if ((q.includes("dos and don'ts") || q.includes("do's and don'ts") || q.includes("literature review tips")) && !q.includes("steps")) {
-            return `✅❌ **Do's and Don'ts of Literature Review**\n\n` +
-                   `**✅ DO'S – What Researchers SHOULD Do:**\n` +
-                   `• Identify and discuss key landmark studies on the topic\n` +
-                   `• Include as much up-to-date material as possible\n` +
-                   `• Check spelling details (especially Asian names)\n` +
-                   `• Be reflexive and examine your own bias\n` +
-                   `• Critically evaluate material and show your analysis\n` +
-                   `• Be analytical, evaluative, and critical\n` +
-                   `• Manage information clearly, systematically, and coherently\n` +
-                   `• Explain the topic in an interesting manner\n\n` +
-                   `**❌ DON'TS – What Researchers SHOULD NOT Do:**\n` +
-                   `• Omit seminal work or papers in the field\n` +
-                   `• Discuss outdated or only old material\n` +
-                   `• Spell authors' names wrongly\n` +
-                   `• Document publication date wrongly\n` +
-                   `• Use concepts without definitions\n` +
-                   `• Use jargon to justify a viewpoint\n` +
-                   `• Produce a list (a list is NOT a review)\n` +
-                   `• Accept any position at face value\n` +
-                   `• Document inaccurate records\n` +
-                   `• Use wrong terminology\n` +
-                   `• Merely describe literature (must critique)\n` +
-                   `• Include irrelevant literature to make it lengthy\n\n` +
-                   `💡 *A good literature review is analytical and evaluative, not just descriptive*`;
-        }
-        
-        // ========== APA REFERENCING FORMAT ==========
-        if (q.includes("apa") || q.includes("referencing format") || q.includes("citation") || q.includes("how to cite") || q.includes("reference format")) {
-            return `📄 **APA Referencing Format – In-Text Citation Examples**\n\n` +
-                   `**Author as part of narrative:**\n` +
-                   `• Parasuraman (1991) has suggested that …\n\n` +
-                   `**Both author and year in parentheses:**\n` +
-                   `• In recent studies … (Hunt, 1999; Osborn, 1998)\n\n` +
-                   `**Two authors:**\n` +
-                   `• Laudon and Traver (2007) reiterated that …\n\n` +
-                   `**Three to five authors (first time):**\n` +
-                   `• Lee, Wong, and Tan (2008) illustrated that …\n\n` +
-                   `**Three to five authors (subsequent):**\n` +
-                   `• Lee et al. (2008) illustrated that …\n\n` +
-                   `**No author:**\n` +
-                   `• Use first few words of title in quotes ("With GM pact," 1990)\n\n` +
-                   `**Same author, same year:**\n` +
-                   `• Parasuraman (1988a, 1988b) suggested …\n\n` +
-                   `**Multiple authors (alphabetical order):**\n` +
-                   `• (Berry, 1994; Bitner, 2000; Parasuraman et al., 1985)\n\n` +
-                   `**Personal communication (in-text only):**\n` +
-                   `• Joyce (personal communication, July 31, 2005) says…\n\n` +
-                   `**Long quotation (>30 words):**\n` +
-                   `• Indent 5 spaces on new line, no quotation marks\n\n` +
-                   `💡 *Reference list is arranged alphabetically by author's last name*`;
-        }
-        
-        // ========== USEFUL PHRASES FOR LITERATURE REVIEW ==========
-        if (q.includes("phrases") || q.includes("writing phrases") || q.includes("how to write literature review")) {
-            return `✍️ **Useful Phrases for In-Text Referencing**\n\n` +
-                   `**Introducing an author's idea:**\n` +
-                   `• Tan (2018) argues that …\n` +
-                   `• As suggested by Trochim (2016) …\n` +
-                   `• Malhotra (2016) maintains that …\n` +
-                   `• James (2018) demonstrates that …\n` +
-                   `• Sekaran (2013) has compiled …\n\n` +
-                   `**Stressing findings:**\n` +
-                   `• Parasuraman et al. (1988) stressed that …\n` +
-                   `• Sureshchandar et al. (2001) reiterates that …\n\n` +
-                   `**Agreeing/Concurring:**\n` +
-                   `• The findings of … concur with …\n` +
-                   `• This procedure has received support (Peter, 1986)\n\n` +
-                   `**Linking ideas:**\n` +
-                   `• James and Lee (2018) link this idea with …\n` +
-                   `• Kueh and Voon (2017) quantitatively tested the …\n` +
-                   `• It has been confirmed by Voon (2017) that …\n\n` +
-                   `**Multiple citations (grouping):**\n` +
-                   `• Much has been written about market orientation (e.g., Narver and Slater, 1990; Kohli and Jaworski, 1990; Ho, 2006)\n` +
-                   `• Other studies (Adam, 1994; Powell, 1995) have also incorporated …\n` +
-                   `• Service is critical for differential advantage (Berry, 1986; Dabholkar et al., 1996)\n\n` +
-                   `💡 *Using varied phrases makes your writing more engaging and professional*`;
-        }
-        
-        // ========== ANNOTATED BIBLIOGRAPHY ==========
-        if (q.includes("annotated bibliography")) {
-            return `📑 **Annotated Bibliography – Systematic Documentation**\n\n` +
-                   `**Definition:** A tool to systematically document what has been read, to motivate and remind the researcher about the research.\n\n` +
-                   `**Sample Format:**\n` +
-                   `• Author(s), year, title, source\n` +
-                   `• Summary of key findings\n` +
-                   `• Methodology used\n` +
-                   `• Relevance to your research\n` +
-                   `• Limitations or gaps identified\n\n` +
-                   `**Benefits:**\n` +
-                   `• Tracks what you've read\n` +
-                   `• Helps organize literature\n` +
-                   `• Makes writing literature review easier\n` +
-                   `• Identifies patterns and gaps\n\n` +
-                   `💡 *Different researchers may have different formats, but consistency is key*`;
-        }
-        
-        // ========== QUALITIES OF GOOD LITERATURE REVIEW ==========
-        if (q.includes("good literature review") || q.includes("quality literature review")) {
-            return `⭐ **Key Requirements of a Good Literature Review**\n\n` +
-                   `**1. Inclusion of Important Variables**\n` +
-                   `• No critical factors left out\n` +
-                   `• Scope narrowed for practicality\n\n` +
-                   `**2. Emergence of Clear Idea**\n` +
-                   `• Know which variables are most important (parsimony)\n` +
-                   `• Understand why and how variables matter\n\n` +
-                   `**3. Problem Refinement**\n` +
-                   `• More precise problem statement\n` +
-                   `• Clear picture of what has/hasn't been done\n\n` +
-                   `**4. Discovery of New Problems**\n` +
-                   `• Avoid reinventing the wheel\n` +
-                   `• Prevent information redundancy\n\n` +
-                   `**5. Testability & Replicability Enhancement**\n` +
-                   `• Identify variables clearly\n` +
-                   `• Relate ideas and theory to applications\n\n` +
-                   `**6. Perceived as Scientific**\n` +
-                   `• Problem seen as relevant and significant\n` +
-                   `• Increased believability\n\n` +
-                   `**7. Knowledge Enhancement**\n` +
-                   `• Teaches researcher and readers\n` +
-                   `• Systematic and comprehensive coverage\n\n` +
-                   `💡 *Being careful at the first step of gathering materials ensures a well-written literature review*`;
-        }
-        
-        // ========== GREETINGS & HELP ==========
-        if (q.match(/^(hi|hello|hey|gm|good morning|good afternoon|greetings)/i)) {
-            return `📚 **Hello! Welcome to Topic 3: Approach Development Assistant**\n\n` +
-                   `I specialize in helping you master:\n\n` +
-                   `📝 **Problem Statement** – Clear, precise statements with examples\n` +
-                   `❓ **Research Questions** – What, Why, How questions to guide research\n` +
-                   `🎯 **Research Objectives** – Explore, describe, examine relationships\n` +
-                   `📊 **Variables** – IV, DV, moderating, intervening (with examples)\n` +
-                   `🔬 **Hypotheses** – Null vs alternative, directional vs non-directional\n` +
-                   `🏗️ **Theoretical Framework** – Schematic diagrams of variables\n` +
-                   `📖 **Literature Review** – Importance, steps, do's and don'ts\n` +
-                   `📄 **Referencing** – APA format with many examples\n\n` +
-                   `What would you like to learn about today?`;
-        }
-        
-        if (q.includes("what can you do") || q.includes("help") || q === "?" || q === "help me" || q.includes("capabilities")) {
-            return `📋 **Topic 3: Developing the Approach – What I Can Help With**\n\n` +
-                   `**Problem Statement:**\n` +
-                   `• Definition and purpose\n` +
-                   `• 3 complete examples from module (Grace Hospital, Joyous Food, Banking)\n\n` +
-                   `**Research Questions & Objectives:**\n` +
-                   `• What, Why, How questions\n` +
-                   `• Explore, describe, examine objectives\n\n` +
-                   `**Variables:**\n` +
-                   `• Independent, dependent, moderating, intervening\n` +
-                   `• Examples and relationships\n\n` +
-                   `**Hypotheses:**\n` +
-                   `• Null (H₀) vs Alternative (Hₐ)\n` +
-                   `• Directional vs non-directional\n` +
-                   `• Examples with proper notation\n\n` +
-                   `**Literature Review:**\n` +
-                   `• Importance (6 key reasons)\n` +
-                   `• 7 steps to conduct\n` +
-                   `• Do's and Don'ts\n` +
-                   `• Quality requirements\n\n` +
-                   `**Referencing:**\n` +
-                   `• APA in-text citation examples\n` +
-                   `• Useful phrases for writing\n` +
-                   `• Annotated bibliography\n\n` +
-                   `**Try asking:** "What is a problem statement?" or "How to develop hypotheses?" or "APA referencing examples"`;
-        }
-        
-        // ========== DEFAULT RESPONSE ==========
-        return `📘 **Topic 3: Developing the Approach to the Problem**\n\n` +
-               `I can help you understand:\n\n` +
-               `📝 **Problem Statement** – Clear, precise statements of the issue to be investigated (with 3 examples from module)\n` +
-               `❓ **Research Questions** – What, Why, How questions guiding research\n` +
-               `🎯 **Research Objectives** – Explore phenomena, describe variables, examine relationships\n` +
-               `📊 **Variables** – Independent (predictor), Dependent (criterion), Moderating (contingent), Intervening (mediating)\n` +
-               `🔬 **Hypotheses** – Null (H₀) vs Alternative (Hₐ), directional vs non-directional\n` +
-               `🏗️ **Theoretical Framework** – Schematic diagram showing variable relationships\n` +
-               `📖 **Literature Review** – Importance (6 reasons), 7 steps, do's and don'ts, quality requirements\n` +
-               `📄 **Referencing** – APA format, in-text citations, useful phrases\n\n` +
-               `**Try asking:**\n` +
-               `• "What is a problem statement? Give examples"\n` +
-               `• "How to develop research objectives?"\n` +
-               `• "Explain the types of variables with examples"\n` +
-               `• "How to write null and alternative hypotheses?"\n` +
-               `• "What are the steps in conducting a literature review?"\n` +
-               `• "Show me APA referencing examples"\n\n` +
-               `Or click one of the suggestion chips above! 🎯`;
-    }
-    
-    // Streaming effect for typing
-    async function streamResponse(bubbleElement, fullText) {
-        bubbleElement.innerHTML = '';
-        let currentText = '';
-        
-        for (let i = 0; i < fullText.length; i++) {
-            currentText += fullText[i];
-            let formatted = currentText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-            bubbleElement.innerHTML = formatted + '<span class="streaming-cursor"></span>';
-            scrollToBottom();
-            const delay = fullText[i] === '\n' ? 35 : (fullText[i] === ' ' ? 12 : 22);
-            await new Promise(r => setTimeout(r, delay));
-        }
-        bubbleElement.innerHTML = currentText
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n/g, '<br>');
-    }
-    
-    function addUserMessageToUI(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message user-message';
-        messageDiv.innerHTML = `
-            <div class="bubble user-bubble">${escapeHtml(text)}</div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-    }
-    
-    function addTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'message bot-message';
-        typingDiv.id = 'typingIndicator';
-        typingDiv.innerHTML = `
-            <div class="typing-indicator">
-                <span></span><span></span><span></span>
-                <span style="width:auto; background:transparent; margin-left:8px; color:#8f9b7a;">Thinking...</span>
-            </div>
-        `;
-        messagesDiv.appendChild(typingDiv);
-        scrollToBottom();
-    }
-    
-    function removeTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-    
-    function createStreamingMessage() {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
-        messageDiv.id = 'streamingMessage';
-        messageDiv.innerHTML = `
-            <div class="bubble bot-bubble" id="streamingBubble"></div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-        return document.getElementById('streamingBubble');
-    }
-    
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    function getTime() {
-        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
     function scrollToBottom() {
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
-    async function sendMessage() {
-        if (isThinking) return;
-        const message = userInput.value.trim();
-        if (!message) return;
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message-bubble');
+        msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'bot-msg');
+        msgDiv.innerHTML = text;
+        messagesContainer.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    function getBotAnswer(questionText) {
+        const q = questionText.toLowerCase();
         
-        isThinking = true;
-        userInput.disabled = true;
-        sendBtn.disabled = true;
+        // Problem Statement
+        if (q.includes('problem statement') || (q.includes('write') && q.includes('problem')) || (q.includes('what is a problem') && !q.includes('identification'))) {
+            return `<b>📝 Problem Statement</b><br><br>
+            The output of the problem definition process is the <b>Problem Statement</b>.<br><br>
+            • A clear and precise statement of the question or issue to be investigated<br>
+            • Goal of finding an answer or solution (Sekaran and Bougie, 2013)<br>
+            • Normally one or two short paragraphs<br>
+            • Clearly indicates what the research is all about and why it's done<br><br>
+            <b>A problem statement can pertain to:</b><br>
+            • Existing problems needing a solution<br>
+            • Opportunities to be tapped or improvements to be made<br>
+            • Areas where conceptual clarity is required<br>
+            • Situations where empirical investigations are required<br><br>
+            <b>Example:</b> "Grace Hospital is currently experiencing a sharp increase in patient complaints... the management needs reliable information on the programme's effectiveness."`;
+        }
         
-        addUserMessageToUI(message);
-        conversationHistory.push({ role: "user", content: message });
+        // Research Questions
+        if (q.includes('research question') || (q.includes('what') && q.includes('why') && q.includes('how')) || (q.includes('questions') && q.includes('research'))) {
+            return `<b>❓ Research Questions</b><br><br>
+            Research questions are refined statements of the specific components of the problem.<br><br>
+            • Ask what specific information is required with respect to the problem's components<br>
+            • Guide the researcher throughout the entire investigation<br>
+            • Start with: <b>What...? Why...? How...?</b><br><br>
+            <b>Example from Grace Hospital case:</b><br>
+            • What are the dimensions of hospital service quality from the patient's perspective?<br>
+            • How does patient-perceived service quality affect patient satisfaction and loyalty?`;
+        }
+        
+        // Research Objectives
+        if (q.includes('research objective') || (q.includes('objective') && q.includes('research')) || (q.includes('purpose') && q.includes('research'))) {
+            return `<b>🎯 Research Objectives</b><br><br>
+            Research objectives serve as a <b>lighthouse</b> for the researcher until completion of the research project.<br><br>
+            <b>Three broad purposes of research:</b><br>
+            1. <b>To explore</b> - become familiar with a phenomenon, gain insights<br>
+            2. <b>To describe</b> - describe phenomenon/variables as complete and precise as possible<br>
+            3. <b>To examine and test</b> - test relationships between or among variables<br><br>
+            <b>Example from Grace Hospital:</b><br>
+            • To identify the dimensions of hospital service quality<br>
+            • To examine the effects of hospital service quality on patient satisfaction and loyalty`;
+        }
+        
+        // Theoretical Framework
+        if (q.includes('theoretical framework') || q.includes('conceptual framework') || q.includes('schematic diagram')) {
+            return `<b>🏗️ Theoretical Framework</b><br><br>
+            A theoretical framework or schematic diagram illustrates:<br>
+            • The variables involved in the study<br>
+            • The relationships between variables<br><br>
+            A good literature review is necessary to:<br>
+            • Identify the appropriate variables<br>
+            • Theorize logical relationships<br>
+            • Develop relevant and testable hypotheses<br><br>
+            <b>Example:</b> Service Quality → Patient Satisfaction → Patient Loyalty (with moderating variables like patient demographics)`;
+        }
+        
+        // Types of Variables
+        if ((q.includes('variables') || q.includes('independent variable') || q.includes('dependent variable') || q.includes('moderating') || q.includes('intervening')) && !q.includes('research design')) {
+            return `<b>📊 Types of Variables</b><br><br>
+            <b>Independent Variable (IV):</b> Predictor variable that influences the dependent variable positively or negatively.<br><br>
+            <b>Dependent Variable (DV):</b> Criterion variable of primary interest; its value depends on the independent variable(s).<br><br>
+            <b>Moderating Variable (MV):</b> Exerts a contingent effect on the IV-DV relationship; can enhance or weaken the original relationship.<br><br>
+            <b>Intervening Variable (InterV):</b> Exerts influence across time (between the time IV influences DV and when effects are 'felt').<br><br>
+            <b>Example:</b> Patient loyalty (DV) is affected by hospital service quality (IV). Patient demographics (MV) change this relationship. Patient satisfaction (InterV) changes the original relationship over time.`;
+        }
+        
+        // Hypotheses
+        if ((q.includes('hypothesis') || q.includes('hypotheses')) && !q.includes('null vs')) {
+            return `<b>🔬 Hypotheses Development</b><br><br>
+            A <b>hypothesis</b> is a declarative statement that is testable - a specified relationship between two or more variables expressed in statistically testable form.<br><br>
+            <b>Null Hypothesis (H₀):</b> States the status quo - "no relationship", "the same", "equals to", "less than or equals to"<br>
+            <b>Alternative Hypothesis (Hₐ):</b> Opposite of the null; rejection of H₀ leads to acceptance of desired conclusion<br><br>
+            <b>Hypothesis formats:</b><br>
+            • <b>If-Then statements:</b> "If service quality is high, then patients will be loyal"<br>
+            • <b>Directional:</b> "There is a positive relationship" (one-tailed test)<br>
+            • <b>Non-directional:</b> "There is a relationship" (two-tailed test)<br><br>
+            <b>Example:</b> H₀: There is no relationship between service quality and patient satisfaction.`;
+        }
+        
+        // Null vs Alternative
+        if (q.includes('null vs alternative') || (q.includes('null hypothesis') && q.includes('alternative'))) {
+            return `<b>🔬 Null Hypothesis (H₀) vs Alternative Hypothesis (Hₐ)</b><br><br>
+            <b>Null Hypothesis (H₀):</b><br>
+            • States the status quo<br>
+            • Carries connotations: "no", "the same", "equals to", "more than or equals to", "less than or equals to"<br>
+            • Example: H₀: µ = 4.0 (two-tailed) or H₀: µ ≤ 4.0 (one-tailed)<br><br>
+            <b>Alternative Hypothesis (Hₐ):</b><br>
+            • Opposite of the null<br>
+            • Rejection of H₀ leads to acceptance of desired conclusion<br>
+            • Example: Hₐ: µ ≠ 4.0 (two-tailed) or Hₐ: µ > 4.0 (one-tailed)<br><br>
+            <b>Example from lecture:</b><br>
+            H₁₀: There is NO relationship between service quality and patient satisfaction.<br>
+            H₁ₐ: There is a SIGNIFICANT relationship between service quality and patient satisfaction.`;
+        }
+        
+        // Importance of Literature Review
+        if ((q.includes('literature review') && (q.includes('important') || q.includes('why'))) || (q.includes('importance') && q.includes('literature'))) {
+            return `<b>📖 Importance of Literature Review</b><br><br>
+            Literature review is the report of a comprehensive review of published and unpublished work in areas of specific interest.<br><br>
+            <b>Main reasons literature review is needed:</b><br>
+            • Avoid ignoring important critical variables<br>
+            • Help highlight important variables<br>
+            • Help design the methodology<br>
+            • Prevent from reinventing the wheel<br>
+            • Basis of qualitative research<br>
+            • Facilitates creative integration of information<br><br>
+            <i>"A good literature review provides the foundation for developing a comprehensive theoretical framework from which hypotheses can be developed."</i>`;
+        }
+        
+        // Reasons for Literature Review
+        if ((q.includes('reasons') || q.includes('why do we need')) && q.includes('literature')) {
+            return `<b>✅ Reasons Why Literature Review is Needed</b><br><br>
+            <b>1. Avoid ignoring important critical variables</b> - ensures no important variables are ignored<br>
+            <b>2. Help highlight important variables</b> - especially from refereed journals and landmark articles<br>
+            <b>3. Help design the methodology</b> - provides useful tips from different fields<br>
+            <b>4. Prevent reinventing the wheel</b> - saves time and effort on already researched topics<br>
+            <b>5. Basis of qualitative research</b> - demonstrates systematic process of tracing origins<br>
+            <b>6. Facilitates creative integration</b> - provides blueprint/framework for research`;
+        }
+        
+        // Requirements of Good Literature Review
+        if (q.includes('requirements') || (q.includes('good literature review') && !q.includes('dos')) || (q.includes('quality') && q.includes('literature review'))) {
+            return `<b>✨ Key Requirements of a Good Literature Review</b><br><br>
+            • <b>Inclusion of important variables</b> - not leaving out key factors<br>
+            • <b>Emergence of clear idea</b> - what variables are most important (parsimony)<br>
+            • <b>Problem refinement</b> - problem statement formulated with higher precision<br>
+            • <b>Discovery of new problems and variables</b> - avoid reinventing the wheel<br>
+            • <b>Testability and replicability enhancement</b> - identify variables and relate ideas to theory<br>
+            • <b>Perceived as scientific</b> - relevant and significant to scientific community<br>
+            • <b>Knowledge enhancement</b> - teaches the researcher and readers`;
+        }
+        
+        // Dos and Don'ts
+        if (q.includes('dos') || q.includes('don ts') || q.includes('do\'s') || (q.includes('should') && q.includes('literature review'))) {
+            return `<b>✅❌ Dos and Don'ts of Writing a Good Literature Review</b><br><br>
+            <b>DO:</b><br>
+            • Identify and discuss relevant key landmark studies<br>
+            • Include as much up-to-date material as possible<br>
+            • Check spelling details (especially Asian names)<br>
+            • Be reflexive and examine your own bias<br>
+            • Critically evaluate material and show analysis<br>
+            • Be analytical, evaluative and critical<br>
+            • Manage information clearly, systematically and coherently<br><br>
+            <b>DON'T:</b><br>
+            • Omit seminal work or papers in the field<br>
+            • Discuss outdated or only old material<br>
+            • Spell authors' names wrongly<br>
+            • Document publication date wrongly<br>
+            • Use concepts without definitions<br>
+            • Produce a list of items (a list is NOT a review)<br>
+            • Accept any position at face value<br>
+            • Document inaccurate record of material<br>
+            • Include irrelevant and very distant literature`;
+        }
+        
+        // Steps in Literature Review
+        if (q.includes('steps') && q.includes('literature review')) {
+            return `<b>📋 Steps in Conducting a Literature Review</b><br><br>
+            <b>Step 1:</b> Identify a working topic - focus on specific area of study<br>
+            <b>Step 2:</b> Review related literature - use keywords, search online databases, browse reference lists<br>
+            <b>Step 3:</b> Focus on specific topics - select really relevant journal articles<br>
+            <b>Step 4:</b> Read articles and evaluate them - understand methodology, testing procedures, synthesize findings<br>
+            <b>Step 5:</b> Organize journal papers and write annotated bibliography - document systematically<br>
+            <b>Step 6:</b> Organize writing based on findings - develop relevant headings and subheadings<br>
+            <b>Step 7:</b> Look at what has been written and insist on producing a critique - analyze for patterns and gaps`;
+        }
+        
+        // Referencing
+        if (q.includes('referencing') || (q.includes('apa') || q.includes('harvard')) || (q.includes('citation') && !q.includes('in-text'))) {
+            return `<b>📚 Referencing Formats</b><br><br>
+            Referencing is about acknowledging sources of reference used in writing.<br><br>
+            <b>Common formats in marketing:</b><br>
+            • <b>APA (American Psychological Association)</b> format<br>
+            • <b>Harvard</b> referencing format<br><br>
+            <b>When to reference:</b><br>
+            • Paraphrasing (expressing idea in own words)<br>
+            • Summarizing (condensed form using own words)<br>
+            • Quoting (using exact words)<br>
+            • Copying (reproducing graph or figure)<br><br>
+            <b>Reference vs Bibliography:</b><br>
+            • <b>Reference list</b> includes details of ALL citations used in the writing<br>
+            • <b>Bibliography</b> includes related works relevant to the topic (reference list is a subset)`;
+        }
+        
+        // In-text Citation Examples
+        if (q.includes('in-text') || (q.includes('cite') && q.includes('reference')) || (q.includes('citation') && q.includes('example'))) {
+            return `<b>✍️ In-Text Citation Examples (APA Format)</b><br><br>
+            • <b>Author as part of narrative:</b> Parasuraman (1991) has suggested that …<br>
+            • <b>Both author and year in parentheses:</b> ... (Hunt, 1999; Osborn, 1998)<br>
+            • <b>Two authors:</b> Laudon and Traver (2007) reiterated that …<br>
+            • <b>3-5 authors (first time):</b> (Sekaran, Smith, & Lee, 2013)<br>
+            • <b>3-5 authors (subsequent):</b> Sekaran et al. (2013) illustrated …<br>
+            • <b>6+ authors:</b> Lee et al. (2008)<br>
+            • <b>No author:</b> ("With GM pact," 1990)<br>
+            • <b>Anonymous:</b> (Anonymous, 1951)<br>
+            • <b>Same author same year:</b> (Parasuraman, 1988a, 1988b)<br>
+            • <b>Personal communication:</b> (Joyce, personal communication, July 31, 2005)`;
+        }
+        
+        // Reference vs Bibliography
+        if ((q.includes('reference vs') || q.includes('bibliography')) && !q.includes('format')) {
+            return `<b>📑 Reference vs Bibliography</b><br><br>
+            <b>Reference List:</b><br>
+            • Includes details of ALL citations used in the literature review and/or other parts of the writing<br>
+            • Arranged in alphabetical order of authors' last names<br>
+            • Subset of the bibliography<br><br>
+            <b>Bibliography:</b><br>
+            • Listing of related works relevant to the main topic of interest<br>
+            • Can include works not directly cited but relevant<br>
+            • Broader than reference list<br><br>
+            <i>A reference list is the subset of the bibliography.</i>`;
+        }
+        
+        // Default
+        return `<b>📘 Topic 3: Developing the Approach to the Problem and Literature Review</b><br><br>
+        Based on your lecture notes, I can help you with:<br><br>
+        📝 <b>Problem Statement</b> - How to write it clearly<br>
+        ❓ <b>Research Questions</b> - What, Why, How questions<br>
+        🎯 <b>Research Objectives</b> - Explore, Describe, Test<br>
+        🏗️ <b>Theoretical Framework</b> - Variables and relationships<br>
+        📊 <b>Types of Variables</b> - IV, DV, Moderating, Intervening<br>
+        🔬 <b>Hypotheses</b> - Null (H₀) vs Alternative (Hₐ)<br>
+        📖 <b>Literature Review</b> - Importance, reasons, requirements<br>
+        ✨ <b>Dos and Don'ts</b> of literature review<br>
+        📋 <b>7 Steps</b> in conducting literature review<br>
+        📚 <b>Referencing</b> - APA and Harvard formats<br><br>
+        Try asking: <i>"What is a problem statement?"</i> or <i>"Explain types of variables"</i> or <i>"How to write hypotheses?"</i>`;
+    }
+
+    function escapeHtmlSimple(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function handleSend() {
+        let query = userInput.value.trim();
+        if (query === "") return;
+        
+        appendMessage(escapeHtmlSimple(query), 'user');
         userInput.value = '';
         
-        addTypingIndicator();
-        await new Promise(r => setTimeout(r, 250 + Math.random() * 250));
-        
-        const response = getSmartResponse(message, conversationHistory);
-        
-        removeTypingIndicator();
-        
-        const bubbleElement = createStreamingMessage();
-        await streamResponse(bubbleElement, response);
-        
-        conversationHistory.push({ role: "assistant", content: response });
-        
-        const streamingDiv = document.getElementById('streamingMessage');
-        if (streamingDiv) streamingDiv.removeAttribute('id');
-        
-        isThinking = false;
-        userInput.disabled = false;
-        sendBtn.disabled = false;
-        userInput.focus();
+        const answerHtml = getBotAnswer(query);
+        appendMessage(answerHtml, 'bot');
     }
     
-    clearChatBtn.addEventListener('click', () => {
-        conversationHistory = [];
-        messagesDiv.innerHTML = '';
-        const welcomeDiv = document.createElement('div');
-        welcomeDiv.className = 'message bot-message';
-        welcomeDiv.innerHTML = `
-            <div class="bubble bot-bubble">
-                🧹 Chat cleared! I'm ready to help with Topic 3: Developing the Approach.<br><br>
-                Ask me about problem statements, research objectives, variables, hypotheses, literature review, or APA referencing!
-            </div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(welcomeDiv);
-        scrollToBottom();
-    });
-    
-    sendBtn.addEventListener('click', sendMessage);
+    sendButton.addEventListener('click', handleSend);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !isThinking && userInput.value.trim()) {
-            sendMessage();
-        }
+        if (e.key === 'Enter') handleSend();
     });
     
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    const topicChips = document.querySelectorAll('.topic-chip');
+    topicChips.forEach(chip => {
         chip.addEventListener('click', () => {
-            if (isThinking) return;
-            userInput.value = chip.textContent;
-            sendMessage();
+            const preQuestion = chip.getAttribute('data-question');
+            if (preQuestion) {
+                appendMessage(preQuestion, 'user');
+                const botAns = getBotAnswer(preQuestion);
+                appendMessage(botAns, 'bot');
+            }
         });
     });
     
-    userInput.focus();
+    window.addEventListener('load', () => {
+        scrollToBottom();
+    });
 </script>
 </body>
 </html>
