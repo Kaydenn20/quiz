@@ -1,783 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Topic 1: Marketing Research Assistant | Green & White Learning</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marketing Research & Analytics AI | Topic 1 Chatbot</title>
 
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
-            background: #f5f7f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 
-        .chat-container {
-            width: 100%;
-            max-width: 750px;
-            height: 90vh;
-            min-height: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #e8ece0;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* Header - Green theme */
-        .chat-header {
-            background: #2e7d32;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1b5e20;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar {
-            width: 42px;
-            height: 42px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #2e7d32;
-        }
-        .header-info h2 {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .header-info p {
-            color: #c8e6c9;
-            font-size: 0.7rem;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            color: white;
-        }
-        .clear-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-            transition: all 0.2s;
-        }
-        .clear-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
 
-        /* Messages Area - White background */
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            background: #ffffff;
-        }
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f0f2e8;
-            border-radius: 10px;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #bdc9a4;
-            border-radius: 10px;
-        }
+.chat-app {
+    width: 100%;
+    max-width: 1280px;
+    height: 92vh;
+    background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+    display: flex;
+    overflow: hidden;
+}
 
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .user-message { align-self: flex-end; }
-        .bot-message { align-self: flex-start; }
+.side-panel {
+    width: 290px;
+    background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
+    padding: 28px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-        .bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            word-wrap: break-word;
-        }
-        .user-bubble {
-            background: #2e7d32;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        .bot-bubble {
-            background: #f0f2e8;
-            color: #1a2e1f;
-            border-bottom-left-radius: 4px;
-        }
-        .message-time {
-            font-size: 0.65rem;
-            margin-top: 6px;
-            color: #8f9b7a;
-            padding-left: 12px;
-        }
+.side-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.side-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
 
-        /* Typing indicator - Green dots */
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 10px 16px;
-            background: #f0f2e8;
-            border-radius: 20px;
-            width: fit-content;
-        }
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #2e7d32;
-            border-radius: 50%;
-            animation: blink 1.3s infinite ease-in-out;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8);}
-            30% { opacity: 1; transform: scale(1.2);}
-        }
+.brand {
+    margin-bottom: 28px;
+    flex-shrink: 0;
+}
 
-        /* Streaming cursor */
-        .streaming-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.1em;
-            background-color: #2e7d32;
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blinkCursor 1s step-end infinite;
-        }
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+.brand h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-        /* Input area */
-        .chat-input-area {
-            background: #ffffff;
-            padding: 16px;
-            border-top: 1px solid #e8ece0;
-        }
-        .input-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            background: #f8faf3;
-            border: 1px solid #d4dbc8;
-            border-radius: 28px;
-            padding: 4px 6px 4px 18px;
-            transition: all 0.2s;
-        }
-        .input-wrapper:focus-within {
-            border-color: #2e7d32;
-            box-shadow: 0 0 0 2px rgba(46,125,50,0.1);
-        }
-        .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 12px 0;
-            color: #1a2e1f;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .input-wrapper input::placeholder {
-            color: #b0bba0;
-        }
-        .input-wrapper button {
-            background: #2e7d32;
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .input-wrapper button:hover:not(:disabled) {
-            background: #1b5e20;
-            transform: scale(1.02);
-        }
-        .input-wrapper button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+.brand p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 6px;
+}
 
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .suggestion-chip {
-            background: #f0f2e8;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #2e7d32;
-            font-weight: 500;
-            border: 1px solid #d4dbc8;
-        }
-        .suggestion-chip:hover {
-            background: #2e7d32;
-            color: white;
-            border-color: #2e7d32;
-        }
+.topic-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 
-        .footer {
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 8px;
-            color: #b0bba0;
-            background: #ffffff;
-            border-top: 1px solid #e8ece0;
-        }
-        
-        .bot-bubble strong {
-            color: #2e7d32;
-        }
-        
-        .bot-bubble a {
-            color: #2e7d32;
-        }
-    </style>
+.topic-section h4 {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+.topic-list::-webkit-scrollbar {
+    width: 4px;
+}
+.topic-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.topic-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
+
+.topic-chip {
+    background: rgba(255,255,255,0.12);
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.topic-chip:hover {
+    background: #ffffff;
+    color: #1a3c2c;
+    transform: translateX(4px);
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fefefe;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid #e9edf2;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2e3a;
+}
+
+.chat-header span {
+    font-size: 0.75rem;
+    color: #5c6f87;
+}
+
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fafcff;
+}
+
+.messages-area::-webkit-scrollbar {
+    width: 6px;
+}
+.messages-area::-webkit-scrollbar-track {
+    background: #eef2f8;
+    border-radius: 8px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+    background: #b9c8b2;
+    border-radius: 8px;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 24px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.bot-msg {
+    background: #f0f4f9;
+    border: 1px solid #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    color: #1e2a3a;
+}
+
+.user-msg {
+    background: #1a5d3c;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.input-row {
+    padding: 16px 24px 24px 24px;
+    border-top: 1px solid #eef2f8;
+    background: white;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 60px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-row input:focus {
+    border-color: #1a5d3c;
+    box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
+}
+
+.input-row button {
+    background: #1a5d3c;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-row button:hover {
+    background: #0e3f28;
+}
+
+@media (max-width: 700px) {
+    .side-panel { display: none; }
+    .message-bubble { max-width: 90%; }
+}
+</style>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="header-left">
-            <div class="avatar">📊</div>
-            <div class="header-info">
-                <h2>Topic 1: Marketing Research Assistant</h2>
-                <p>Definition • Importance • Research Process</p>
-            </div>
+
+<div class="chat-app">
+    <div class="side-panel">
+        <div class="brand">
+            <h2>📊 Marketing Research<br>& Analytics AI</h2>
+            <p>Topic 1: Intro to Marketing Research</p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <div class="badge">Learning Activities</div>
-            <button id="clearChatBtn" class="clear-btn">Clear</button>
+        <div class="topic-section">
+            <h4>📚 TOPIC 1: LEARNING TOPICS</h4>
+            <div class="topic-list">
+                <div class="topic-chip" data-question="What is marketing research?">📖 Definition of Marketing Research</div>
+                <div class="topic-chip" data-question="What is the importance of marketing research?">⭐ Importance of Marketing Research</div>
+                <div class="topic-chip" data-question="What is the role of marketing research?">🎯 Role of Marketing Research</div>
+                <div class="topic-chip" data-question="What are the 6 steps in the marketing research process?">⚙️ Marketing Research Process (6 Steps)</div>
+                <div class="topic-chip" data-question="What is the marketing environment?">🌍 Marketing Environment</div>
+                <div class="topic-chip" data-question="What is problem identification research?">🔎 Problem Identification Research</div>
+                <div class="topic-chip" data-question="What is problem solving research?">🛠️ Problem Solving Research</div>
+                <div class="topic-chip" data-question="What is the difference between internal and external researchers?">👥 Internal vs External Researchers</div>
+                <div class="topic-chip" data-question="What are the qualities of a good marketing researcher?">✨ Qualities of a Marketing Researcher</div>
+                <div class="topic-chip" data-question="What is the scientific approach in marketing research?">🔬 Scientific Approach</div>
+                <div class="topic-chip" data-question="What are the marketing variables (micro-environment)?">📦 Marketing Mix (Controllable Variables)</div>
+                <div class="topic-chip" data-question="Who are the customers and stakeholders?">👥 Customers & Stakeholders</div>
+                <div class="topic-chip" data-question="What is research design?">📐 Research Design</div>
+                <div class="topic-chip" data-question="What is data collection in marketing research?">📊 Data Collection Methods</div>
+                <div class="topic-chip" data-question="What are the learning outcomes for Topic 1?">📚 Learning Outcomes</div>
+            </div>
         </div>
     </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="bubble bot-bubble">
-                🌿 <strong>Welcome to Marketing Research (Topic 1) Assistant!</strong><br><br>
-                I'm here to help you master the fundamentals of marketing research based on your course module.<br><br>
-                <strong>📌 Learning Outcomes:</strong><br>
-                ✅ Define and understand the role of marketing research<br>
-                ✅ Appreciate the importance of marketing research<br>
-                ✅ Know the critical steps in the marketing research process<br><br>
-                <strong>🔍 What I can help you with:</strong><br><br>
-                • Definition of marketing research (systematic & objective process)<br>
-                • Importance & role in marketing strategies<br>
-                • Marketing environment (micro & macro variables)<br>
-                • Problem identification research vs Problem solving research<br>
-                • 6-Step Marketing Research Process<br>
-                • Internal vs External researchers<br>
-                • Qualities of a good marketing researcher<br><br>
-                Just type your question below or click a suggestion! 🎯
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3>🧠 Marketing Research & Analytics Tutor</h3>
+            <span>Based on your complete lecture notes | Ask anything about Topic 1!</span>
+        </div>
+        <div class="messages-area" id="chatMessages">
+            <div class="message-bubble bot-msg">
+                👋 <strong>Hello!</strong> I'm your Marketing Research AI for <strong>Topic 1: Introduction to Marketing Research</strong>. Ask me about definition, importance, role, process, environment, problem identification/solving research, researcher qualities, and more — all based on your provided lecture notes!
             </div>
-            <div class="message-time">Just now</div>
         </div>
-    </div>
-
-    <div class="chat-input-area">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ask about marketing research definition, importance, process..." autocomplete="off">
-            <button id="sendBtn">➤</button>
+        <div class="input-row">
+            <input type="text" id="userQuery" placeholder="e.g., What is problem identification research? or List the steps..." autocomplete="off">
+            <button id="sendBtn">Send →</button>
         </div>
-        <div class="suggestions" id="suggestionsPanel">
-            <div class="suggestion-chip">What is marketing research? (definition)</div>
-            <div class="suggestion-chip">Why is marketing research important?</div>
-            <div class="suggestion-chip">Explain the 6 steps in marketing research process</div>
-            <div class="suggestion-chip">Problem identification vs problem solving research</div>
-            <div class="suggestion-chip">Marketing environment variables (micro & macro)</div>
-            <div class="suggestion-chip">Internal vs external researchers</div>
-            <div class="suggestion-chip">Qualities of a good marketing researcher</div>
-            <div class="suggestion-chip">What is scientific investigation in MR?</div>
-        </div>
-        <div class="footer">💡 Based on your Topic 1 module • No API key required • Green & White Learning Platform</div>
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // MARKETING RESEARCH TOPIC 1 KNOWLEDGE BASE
-    // Based on complete module content: Definition, Importance, Process
-    // ============================================================
-    
-    let conversationHistory = [];
-    let isThinking = false;
+    const messagesContainer = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userQuery');
+    const sendButton = document.getElementById('sendBtn');
 
-    const messagesDiv = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-
-    function getSmartResponse(userMessage, history) {
-        const q = userMessage.toLowerCase().trim();
-        
-        // ========== DEFINITION OF MARKETING RESEARCH ==========
-        if (q.includes("definition") || (q.includes("what is") && q.includes("marketing research")) || 
-            (q.includes("define") && q.includes("marketing research")) || q.includes("what does marketing research mean")) {
-            return `📖 **Definition of Marketing Research**\n\n` +
-                   `Marketing research is a **systematic and objective process** of:\n\n` +
-                   `• Identifying and defining the marketing problem(s)\n` +
-                   `• Developing the approach\n` +
-                   `• Designing the research\n` +
-                   `• Collecting and analyzing data\n` +
-                   `• Disseminating marketing information\n\n` +
-                   `🎯 **Purpose:** To make good marketing decision(s) towards marketing excellence.\n\n` +
-                   `✨ **Key characteristics:**\n` +
-                   `• Scientific process requiring careful and systematic planning\n` +
-                   `• Purposive investigation that is methodologically sound\n` +
-                   `• Can be observed, evaluated, and replicated by others\n\n` +
-                   `💡 *"A scientific process which requires careful and systematic planning at different stages"*`;
-        }
-        
-        // ========== IMPORTANCE OF MARKETING RESEARCH ==========
-        if (q.includes("importance") || (q.includes("why") && q.includes("marketing research")) || 
-            q.includes("role of marketing research") || (q.includes("important") && q.includes("marketing research"))) {
-            return `🌟 **Importance of Marketing Research**\n\n` +
-                   `**1. Develops Marketing Strategies & Tactics**\n` +
-                   `• Managerial decisions based on scientific research are more effective and efficient\n` +
-                   `• Much wastage of resources can be avoided\n\n` +
-                   `**2. Helps Managers Adapt to Challenges**\n` +
-                   `• Helps marketing and functional managers adapt to problems/challenges\n` +
-                   `• Transforms market management thinking to reflect target customers' view\n\n` +
-                   `**3. Identifies Market Opportunities**\n` +
-                   `• Better identification and exploitation of opportunities\n` +
-                   `• Leverages organizational performance\n\n` +
-                   `**4. Provides Information for Decision Making**\n` +
-                   `• Helps managers know customers, competitors, and own organization\n` +
-                   `• Predicts who tomorrow's consumers will be\n` +
-                   `• Identifies buying habits and consumer attitudes\n\n` +
-                   `**5. Strategic Tool for Competition**\n` +
-                   `• Recognizes competitor's strengths and weaknesses\n` +
-                   `• Gains insights into own organizational behaviour\n` +
-                   `• Helps solve internal organizational problems\n\n` +
-                   `**6. Responds to Changing Environment**\n` +
-                   `• With rapidly changing marketing environment, managers need timely information\n` +
-                   `• Helps identify marketing variables important to the environment\n\n` +
-                   `💡 *As consumers become more affluent and sophisticated, managers need better information*`;
-        }
-        
-        // ========== MARKETING ENVIRONMENT (MICRO & MACRO) ==========
-        if (q.includes("environment") || q.includes("micro") || q.includes("macro") || 
-            q.includes("marketing variables") || q.includes("controllable") || q.includes("uncontrollable")) {
-            return `🌍 **Marketing Environment Variables**\n\n` +
-                   `**MICRO-ENVIRONMENT (Controllable / Marketing Mix Variables)**\n` +
-                   `• Product 📦\n` +
-                   `• Pricing 💰\n` +
-                   `• Promotion 📢\n` +
-                   `• Distribution 🚚\n` +
-                   `• Service ⭐\n` +
-                   `• People 👥\n` +
-                   `• Process ⚙️\n\n` +
-                   `**CUSTOMERS / STAKEHOLDERS (Targeted individuals/groups)**\n` +
-                   `• Consumers, Employees, Shareholders\n` +
-                   `• Suppliers, Government, NGOs\n\n` +
-                   `**MACRO-ENVIRONMENT (Uncontrollable - must be aware of changes)**\n` +
-                   `• Economy 📈\n` +
-                   `• Technology 💻\n` +
-                   `• Competition 🏆\n` +
-                   `• Legal & Political ⚖️\n` +
-                   `• Social & Cultural 🌎\n` +
-                   `• Physical 🏔️\n` +
-                   `• Natural 🌿\n\n` +
-                   `💡 *Market-oriented firms continuously put customers' interests first for optimum profitability*`;
-        }
-        
-        // ========== PROBLEM IDENTIFICATION VS PROBLEM SOLVING ==========
-        if (q.includes("problem identification") || q.includes("problem solving") || 
-            q.includes("basic research") || q.includes("applied research") || q.includes("pure research")) {
-            return `📊 **Types of Marketing Research**\n\n` +
-                   `**1. PROBLEM IDENTIFICATION RESEARCH (Basic / Pure Research)**\n` +
-                   `• Aim: Identify and understand marketing problems and situations\n` +
-                   `• Examples:\n` +
-                   `  - Market potential research\n` +
-                   `  - Feasibility study\n` +
-                   `  - Market share research\n` +
-                   `  - Image research\n` +
-                   `  - Market characteristic research\n` +
-                   `  - Sales analysis research\n` +
-                   `  - Service climate/culture study\n` +
-                   `  - Forecasting research\n` +
-                   `  - Business trends analysis\n` +
-                   `  - Cross-cultural customer analysis\n\n` +
-                   `**2. PROBLEM SOLVING RESEARCH (Applied Research)**\n` +
-                   `• Aim: Help solve or resolve specific marketing problems\n` +
-                   `• Examples:\n` +
-                   `  - Market Segmentation research\n` +
-                   `  - Market targeting study\n` +
-                   `  - Market positioning study\n` +
-                   `  - Product research\n` +
-                   `  - Pricing research\n` +
-                   `  - Promotion research\n` +
-                   `  - Distribution research\n` +
-                   `  - Service quality research\n` +
-                   `  - Internal marketing research\n` +
-                   `  - Marketing performance research\n\n` +
-                   `💡 *Both types are essential for comprehensive marketing understanding*`;
-        }
-        
-        // ========== 6 STEP MARKETING RESEARCH PROCESS ==========
-        if ((q.includes("steps") || q.includes("process") || q.includes("6 steps") || 
-             q.includes("research process") || q.includes("marketing research process")) && 
-            !q.includes("environment") && !q.includes("problem identification")) {
-            return `⚙️ **The 6-Step Marketing Research Process**\n\n` +
-                   `**STEP 1: Identifying and Defining the Problem**\n` +
-                   `• Most important step! If problems are well-defined, research can be designed properly\n` +
-                   `• Involves discussion with decision makers, interviews with experts, secondary data analysis\n\n` +
-                   `**STEP 2: Developing the Approach to the Problem**\n` +
-                   `• Formulating research objectives, research questions\n` +
-                   `• Developing conceptual/theoretical framework and hypotheses\n` +
-                   `• Literature review guides understanding\n\n` +
-                   `**STEP 3: Designing the Research**\n` +
-                   `• Framework/blueprint for conducting the research project\n` +
-                   `• Includes: information needed, investigation type, data collection methods, sampling plan, measurement\n\n` +
-                   `**STEP 4: Collecting the Data**\n` +
-                   `• Field force operation (personal interviewing, telephone, mail, electronic)\n` +
-                   `• Proper selection, training, supervision of fieldworkers minimizes errors\n\n` +
-                   `**STEP 5: Preparing and Analyzing the Data**\n` +
-                   `• Editing, coding, transcribing, data entry, cleaning, verification\n` +
-                   `• Data analyzed to derive information related to research problem\n\n` +
-                   `**STEP 6: Reporting and Presenting**\n` +
-                   `• Document entire project in written report\n` +
-                   `• Oral presentation using appropriate visual aids\n` +
-                   `• Present findings to management and clients\n\n` +
-                   `💡 *Scientific investigation is essential — must be purposive, rigorous, testable, replicable*`;
-        }
-        
-        // ========== QUALITIES OF A GOOD MARKETING RESEARCHER ==========
-        if (q.includes("qualities") || q.includes("good researcher") || q.includes("marketing researcher") && q.includes("qualities")) {
-            return `👨‍🔬 **Desirable Qualities of a Marketing Researcher**\n\n` +
-                   `**Knowledge & Professional:**\n` +
-                   `• 📚 Knowledgeable in marketing (problem definition, analysis, recommendations)\n` +
-                   `• 💼 Professional (for overall project management)\n` +
-                   `• 🧪 Competent in research methodology\n\n` +
-                   `**Interpersonal & Communication:**\n` +
-                   `• 🤝 Sociable (project solicitation, data collection, presentation)\n` +
-                   `• 💬 Fluent in required language (data collection & presentation)\n` +
-                   `• 🎤 Energetic (especially for data collection)\n\n` +
-                   `**Analytical & Critical:**\n` +
-                   `• 🔍 Analytical (data analysis and discussions)\n` +
-                   `• ⚖️ Critical (literature review and data analysis)\n\n` +
-                   `**Personal Attributes:**\n` +
-                   `• 🏃 Persistent (continuously working, performance-oriented)\n` +
-                   `• ⚡ Energetic (data collection)\n` +
-                   `• 🛡️ Ethical (overall project)\n` +
-                   `• 📈 Experienced (overall project)\n\n` +
-                   `💡 *Managers should be wary of researchers offering low prices or unrealistic promises*`;
-        }
-        
-        // ========== INTERNAL VS EXTERNAL RESEARCHERS ==========
-        if (q.includes("internal researcher") || q.includes("external researcher") || 
-            (q.includes("internal") && q.includes("external")) || q.includes("hire researcher")) {
-            return `🏢 **Internal vs External Marketing Researchers**\n\n` +
-                   `**INTERNAL RESEARCHERS**\n` +
-                   `• ✅ Advantages:\n` +
-                   `  - Familiar with company culture and products\n` +
-                   `  - Understand internal processes\n` +
-                   `• ❌ Disadvantages:\n` +
-                   `  - May not be sufficiently familiar with technically complex products\n` +
-                   `  - May be influenced by internal politics\n` +
-                   `  - May have stereotyped views\n\n` +
-                   `**EXTERNAL RESEARCHERS**\n` +
-                   `• ✅ Advantages:\n` +
-                   `  - Objectivity (no concern for internal politics)\n` +
-                   `  - Fresh perspective (not same stereotype as internal employees)\n` +
-                   `  - May be experts in latest statistical techniques\n` +
-                   `  - Provide answers without fear of reprisal\n` +
-                   `• ❌ Disadvantages:\n` +
-                   `  - May lack product-specific knowledge\n` +
-                   `  - Cost considerations\n\n` +
-                   `💡 *Urgency of decision and personal resources influence the decision to use external researchers*`;
-        }
-        
-        // ========== SCIENTIFIC INVESTIGATION ==========
-        if (q.includes("scientific") || q.includes("systematic") || q.includes("empirical") || 
-            q.includes("scientific method") || q.includes("scientific investigation")) {
-            return `🔬 **Scientific Investigation in Marketing Research**\n\n` +
-                   `**Core Principle:**\n` +
-                   `• All propositions must be subjected to empirical test(s)\n` +
-                   `• Research must be observable, evaluable, and replicable by others\n\n` +
-                   `**Scientific Method ensures:**\n` +
-                   `• Objectivity in gathering facts\n` +
-                   `• Testing of creative ideas for alternative marketing strategies\n` +
-                   `• Elimination of commercialization of products that are not customer-oriented\n\n` +
-                   `**8 Characteristics of Scientific Marketing Research:**\n` +
-                   `1. Purposive – Has clear purpose\n` +
-                   `2. Rigorous – Thorough and careful\n` +
-                   `3. Testable – Can be empirically tested\n` +
-                   `4. Replicable – Can be reproduced\n` +
-                   `5. Precise – Accurate and exact\n` +
-                   `6. Objective – Free from bias\n` +
-                   `7. Representative – Reflects population\n` +
-                   `8. Parsimonious – Simple and economical\n\n` +
-                   `💡 *Scientific investigation helps eliminate commercialization of products not meeting customer needs*`;
-        }
-        
-        // ========== QUESTIONS MARKETING MANAGERS ASK ==========
-        if (q.includes("questions") && q.includes("manager") || q.includes("marketing manager") && q.includes("decision")) {
-            return `❓ **Strategic Questions Marketing Managers Ask**\n\n` +
-                   `Marketing managers need information to answer questions like:\n\n` +
-                   `• Should the promotion budget be decreased or increased? 📢\n` +
-                   `• Should a new product be produced? 🆕\n` +
-                   `• Should the market segment(s) be differentiated? 🎯\n` +
-                   `• How will consumers respond to products and offerings?\n` +
-                   `• What are our competitors' strengths and weaknesses?\n` +
-                   `• How can we improve our products and services?\n\n` +
-                   `**Marketing decisions include:**\n` +
-                   `• Potential opportunity target market selection\n` +
-                   `• Market segmentation\n` +
-                   `• Planning and implementation of marketing programmes\n` +
-                   `• Marketing performance evaluation and control\n` +
-                   `• Price, product, promotion, and distribution decisions\n\n` +
-                   `💡 *Effective marketing research provides valid and reliable information for these decisions*`;
-        }
-        
-        // ========== GREETINGS & HELP ==========
-        if (q.match(/^(hi|hello|hey|gm|good morning|good afternoon|greetings)/i)) {
-            return `🌿 **Hello! Welcome to Topic 1: Marketing Research Assistant**\n\n` +
-                   `I'm here to help you master:\n\n` +
-                   `📖 **Definition** – What is marketing research?\n` +
-                   `🌟 **Importance** – Why it matters for marketing excellence\n` +
-                   `⚙️ **6-Step Process** – From problem definition to reporting\n` +
-                   `🌍 **Environment** – Micro (controllable) & Macro (uncontrollable) variables\n` +
-                   `📊 **Research Types** – Problem identification vs Problem solving\n` +
-                   `👨‍🔬 **Researchers** – Internal vs external, qualities of good researchers\n` +
-                   `🔬 **Scientific Method** – Characteristics of scientific research\n\n` +
-                   `What would you like to learn about today?`;
-        }
-        
-        if (q.includes("what can you do") || q.includes("help") || q === "?" || q === "help me" || q.includes("capabilities")) {
-            return `📋 **Topic 1: Marketing Research – What I Can Help With**\n\n` +
-                   `**Definition & Role:**\n` +
-                   `• Systematic/objective process definition\n` +
-                   `• Purpose for marketing excellence\n\n` +
-                   `**Importance:**\n` +
-                   `• Strategy development, opportunity identification\n` +
-                   `• Decision making, competitive advantage\n\n` +
-                   `**Environment:**\n` +
-                   `• Micro-environment (controllable variables)\n` +
-                   `• Macro-environment (uncontrollable factors)\n\n` +
-                   `**Research Types:**\n` +
-                   `• Problem identification research (basic/pure)\n` +
-                   `• Problem solving research (applied)\n\n` +
-                   `**6-Step Process:**\n` +
-                   `• Problem definition → Approach → Design → Data collection → Analysis → Reporting\n\n` +
-                   `**Researchers:**\n` +
-                   `• Internal vs External researchers\n` +
-                   `• Desirable qualities of researchers\n\n` +
-                   `**Try asking:** "What is marketing research definition?" or "Explain the 6 steps"`;
-        }
-        
-        // ========== DEFAULT RESPONSE ==========
-        return `📘 **Topic 1: Marketing Research Fundamentals**\n\n` +
-               `I can help you understand:\n\n` +
-               `📖 **Definition** – Systematic & objective process for good marketing decisions\n` +
-               `🌟 **Importance** – Strategy development, opportunity identification, competitive edge\n` +
-               `🌍 **Environment** – Micro (controllable: product, price, promotion, distribution) & Macro (uncontrollable: economy, tech, competition, legal)\n` +
-               `📊 **Research Types** – Problem identification (basic) vs Problem solving (applied)\n` +
-               `⚙️ **6-Step Process** – Define problem → Approach → Design → Collect → Analyze → Report\n` +
-               `👨‍🔬 **Researchers** – Internal vs external, desirable qualities\n` +
-               `🔬 **Scientific Method** – Purposive, rigorous, testable, replicable, precise, objective, representative, parsimonious\n\n` +
-               `**Try asking:**\n` +
-               `• "What is the definition of marketing research?"\n` +
-               `• "Why is marketing research important?"\n` +
-               `• "Explain the 6 steps in marketing research process"\n` +
-               `• "What is problem identification research?"\n` +
-               `• "Qualities of a good marketing researcher"\n\n` +
-               `Or click one of the suggestion chips above! 🎯`;
-    }
-    
-    // Streaming effect for typing
-    async function streamResponse(bubbleElement, fullText) {
-        bubbleElement.innerHTML = '';
-        let currentText = '';
-        
-        for (let i = 0; i < fullText.length; i++) {
-            currentText += fullText[i];
-            let formatted = currentText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-            bubbleElement.innerHTML = formatted + '<span class="streaming-cursor"></span>';
-            scrollToBottom();
-            const delay = fullText[i] === '\n' ? 35 : (fullText[i] === ' ' ? 12 : 22);
-            await new Promise(r => setTimeout(r, delay));
-        }
-        bubbleElement.innerHTML = currentText
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n/g, '<br>');
-    }
-    
-    function addUserMessageToUI(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message user-message';
-        messageDiv.innerHTML = `
-            <div class="bubble user-bubble">${escapeHtml(text)}</div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-    }
-    
-    function addTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'message bot-message';
-        typingDiv.id = 'typingIndicator';
-        typingDiv.innerHTML = `
-            <div class="typing-indicator">
-                <span></span><span></span><span></span>
-                <span style="width:auto; background:transparent; margin-left:8px; color:#8f9b7a;">Thinking...</span>
-            </div>
-        `;
-        messagesDiv.appendChild(typingDiv);
-        scrollToBottom();
-    }
-    
-    function removeTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-    
-    function createStreamingMessage() {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
-        messageDiv.id = 'streamingMessage';
-        messageDiv.innerHTML = `
-            <div class="bubble bot-bubble" id="streamingBubble"></div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-        scrollToBottom();
-        return document.getElementById('streamingBubble');
-    }
-    
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    function getTime() {
-        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
     function scrollToBottom() {
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
-    async function sendMessage() {
-        if (isThinking) return;
-        const message = userInput.value.trim();
-        if (!message) return;
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message-bubble');
+        msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'bot-msg');
+        msgDiv.innerHTML = text;
+        messagesContainer.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    function getBotAnswer(questionText) {
+        const q = questionText.toLowerCase();
         
-        isThinking = true;
-        userInput.disabled = true;
-        sendBtn.disabled = true;
+        // Definition
+        if (q.includes('definition') || q.includes('what is marketing research') || (q.includes('marketing research') && (q.includes('mean') || q.includes('define')))) {
+            return `<b>📌 Marketing Research Definition</b><br><br>Marketing research is a <b>systematic and objective process</b> of:<br>• Identifying and defining marketing problem(s)<br>• Developing the research approach<br>• Designing the research<br>• Collecting and analyzing data<br>• Disseminating marketing information<br><br><i>Purpose: making good marketing decisions towards marketing excellence. It is a scientific process requiring careful planning at different stages.</i>`;
+        }
         
-        addUserMessageToUI(message);
-        conversationHistory.push({ role: "user", content: message });
+        // Importance
+        if (q.includes('importance') || q.includes('why is') || q.includes('benefits') || q.includes('advantage') || (q.includes('important') && q.includes('market'))) {
+            return `<b>⭐ Importance of Marketing Research</b><br><br>✅ Improves marketing strategies & reduces wastage of resources<br>✅ Identifies market opportunities & customer needs<br>✅ Helps managers respond to competition & environmental changes<br>✅ Enhances organizational performance<br>✅ Helps transform market management thinking to reflect target customers' view<br>✅ Avoids poor decisions, improves product, price, promotion, distribution`;
+        }
+        
+        // Role
+        if (q.includes('role') || q.includes('function') || q.includes('what does marketing research do') || q.includes('purpose')) {
+            return `<b>🎯 Role of Marketing Research</b><br><br>• Supports marketing decision-making (strategic & tactical)<br>• Identifies customer needs, competitors, and environment<br>• Helps develop marketing mix strategies<br>• Provides insights about micro & macro environment<br>• Enables managers to evaluate performance, segmentation & targeting<br>• Helps predict future consumers and their buying habits`;
+        }
+        
+        // Process / Steps
+        if (q.includes('process') || q.includes('steps') || q.includes('stage') || q.includes('how to conduct') || q.includes('methodology')) {
+            return `<b>⚙️ Marketing Research Process (6 Steps)</b><br><br>
+            <b>Step 1: Identify & Define Problem</b> – most important step; discussion with decision makers, experts, secondary data analysis<br>
+            <b>Step 2: Develop Approach</b> – formulate objectives, research questions, theoretical framework, hypotheses<br>
+            <b>Step 3: Design Research</b> – blueprint including info needed, type of investigation, sampling plan, instrumentation<br>
+            <b>Step 4: Collect Data</b> – field force, personal interviewing, telephone, mail, electronic methods<br>
+            <b>Step 5: Prepare & Analyze Data</b> – editing, coding, transcription, data cleaning, statistical analysis<br>
+            <b>Step 6: Report & Present</b> – written report with findings, oral presentation to management<br><br>
+            <i>Scientific research must be purposive, rigorous, testable, replicable, precise, objective, representative, and parsimonious.</i>`;
+        }
+        
+        // Environment
+        if (q.includes('environment') || q.includes('external factors') || q.includes('uncontrollable') || q.includes('macro')) {
+            return `<b>🌍 Marketing Environment (External Uncontrollable Factors)</b><br><br>Organizations cannot control these but must be aware of changes:<br><br>• Economy<br>• Technology<br>• Competition<br>• Legal & Political<br>• Social & Cultural<br>• Physical & Natural<br><br>Marketing research helps managers respond strategically to these environmental forces.`;
+        }
+        
+        // Problem Identification
+        if (q.includes('problem identification') || q.includes('basic research') || q.includes('pure research')) {
+            return `<b>🔎 Problem Identification Research (Basic/Pure Research)</b><br><br>Aims to identify and understand marketing problems/situations.<br><br><b>Examples from lecture notes:</b><br>• Market potential research<br>• Feasibility study<br>• Market share research<br>• Image research<br>• Market characteristic research<br>• Sales analysis research<br>• Service climate/culture study<br>• Forecasting research<br>• Business trends and target market analysis<br>• Cross-cultural customer analysis`;
+        }
+        
+        // Problem Solving
+        if (q.includes('problem solving') || q.includes('applied research')) {
+            return `<b>🛠️ Problem Solving Research (Applied Research)</b><br><br>Helps solve specific marketing problems faced by organizations.<br><br><b>Examples from lecture notes:</b><br>• Market Segmentation research<br>• Market targeting study<br>• Market positioning study<br>• Product research<br>• Pricing research<br>• Promotion research<br>• Distribution research<br>• Service quality research<br>• Internal marketing research<br>• Marketing performance and management research`;
+        }
+        
+        // Internal vs External Researchers
+        if ((q.includes('internal') && q.includes('external')) || q.includes('researcher types') || q.includes('hire researchers')) {
+            return `<b>👥 Internal vs External Marketing Researchers</b><br><br><b>Internal Researchers:</b> employees within organization, familiar with culture but may lack objectivity or specialized techniques.<br><br><b>External Researchers:</b> hired from outside agencies, bring fresh perspective, expertise in advanced statistical methods, and no internal politics. Especially useful for complex industrial products or urgent decisions.<br><br>External researchers can provide unbiased answers without fear of reprisal. Both must be competent, professional, ethical.`;
+        }
+        
+        // Qualities of Researcher
+        if (q.includes('qualities') || q.includes('characteristics') || q.includes('good researcher') || q.includes('effective researcher')) {
+            return `<b>✨ Desirable Qualities of a Marketing Researcher</b><br><br>From the lecture notes:<br><br>• <b>Knowledgeable</b> in marketing (problem definition, analysis, recommendations)<br>• <b>Professional</b> for overall project management<br>• <b>Competent</b> in research methodology<br>• <b>Sociable</b> (project solicitation, data collection, presentation)<br>• <b>Persistent</b> – continuously working and performance-oriented<br>• <b>Fluent</b> in required language<br>• <b>Energetic</b> especially for data collection<br>• <b>Analytical</b> for data analysis and discussions<br>• <b>Critical</b> for literature review and data analysis<br>• <b>Ethical</b> for overall project<br>• <b>Experienced</b> for overall project<br><br><i>Marketing research excellence demands high integrity and expertise.</i>`;
+        }
+        
+        // Scientific Approach
+        if (q.includes('scientific') || q.includes('rigorous') || q.includes('replicable') || q.includes('empirical')) {
+            return `<b>🔬 Scientific Investigation in Marketing Research</b><br><br>All propositions must be subjected to empirical tests. The scientific method ensures objectivity, replication, and observation by others.<br><br><b>Characteristics of scientific marketing research:</b><br>• Purposive<br>• Rigorous<br>• Testable<br>• Replicable<br>• Precise<br>• Objective<br>• Representative<br>• Parsimonious<br><br><i>Scientific investigation helps eliminate commercialization of products that are not customer-oriented.</i>`;
+        }
+        
+        // Marketing Mix / Controllable Variables
+        if ((q.includes('marketing mix') || q.includes('controllable') || q.includes('4ps') || q.includes('product price promotion')) && !q.includes('environment')) {
+            return `<b>📦 Marketing Variables (Micro-environment / Controllable)</b><br><br>Organizations can manage these effectively:<br><br>• <b>Product</b><br>• <b>Pricing</b><br>• <b>Promotion</b><br>• <b>Distribution</b><br>• <b>Service</b><br>• <b>People</b><br>• <b>Process</b><br><br>Marketing research provides the necessary intelligence to optimize these variables for target customers.`;
+        }
+        
+        // Customers & Stakeholders
+        if ((q.includes('customer') || q.includes('stakeholder') || q.includes('consumer')) && !q.includes('environment')) {
+            return `<b>👥 Customers & Stakeholders</b><br><br>Includes:<br>• Consumers<br>• Employees<br>• Shareholders<br>• Suppliers<br>• Government and non-government organizations<br><br>Market-oriented organizations put customers' interests first for profitability and organizational excellence. Marketing research helps understand their needs, wants, and desires.`;
+        }
+        
+        // Research Design
+        if (q.includes('research design') || q.includes('blueprint') || q.includes('framework for research')) {
+            return `<b>📐 Research Design</b><br><br>A research design is a framework or blueprint for conducting the entire marketing research project. Tasks involved:<br><br>• Identification of information needed<br>• Types of investigation (exploratory, descriptive, causal)<br>• Primary and/or secondary data analysis<br>• Qualitative or quantitative research<br>• Unit of analysis<br>• Data collection methods<br>• Measurement and scaling procedures<br>• Instrumentation and questionnaire design<br>• Sampling technique and sample size<br>• Data analysis strategy`;
+        }
+        
+        // Data Collection
+        if (q.includes('data collection') || q.includes('collecting data') || q.includes('field force')) {
+            return `<b>📊 Data Collection in Marketing Research</b><br><br>Data collection involves a field force operating in various modes:<br><br>• Personal interviewing (at home, mall intercept, computer-assisted)<br>• Telephone interviewing (traditional or computer-assisted)<br>• Mail surveys (traditional mail and mail panel)<br>• Electronic methods (email or internet)<br><br>Proper selection, training, supervision and evaluation of fieldworkers helps minimize data collection errors.`;
+        }
+        
+        // Learning Outcomes
+        if (q.includes('learning outcome') || q.includes('what will i learn') || q.includes('objectives')) {
+            return `<b>📚 Learning Outcomes (Topic 1)</b><br><br>By the end of this module, learners will be able to:<br><br>✅ <b>Define and understand</b> the role of marketing research<br>✅ <b>Appreciate the importance</b> of marketing research<br>✅ <b>Know the critical steps</b> in the marketing research process<br><br>All these outcomes are covered in detail through this AI tutor.`;
+        }
+        
+        // Default fallback
+        return `<b>📘 Topic 1: Introduction to Marketing Research</b><br><br>Based on your lecture notes, I can help you with:<br><br>• <b>Definition</b> of marketing research<br>• <b>Importance & Role</b><br>• <b>6-Step Process</b><br>• <b>Marketing Environment</b><br>• <b>Problem Identification vs Problem Solving Research</b><br>• <b>Internal vs External Researchers</b><br>• <b>Qualities of Marketing Researchers</b><br>• <b>Scientific Approach</b><br>• <b>Marketing Mix (Controllable Variables)</b><br>• <b>Customers & Stakeholders</b><br>• <b>Research Design & Data Collection</b><br><br>Please type your question or click any topic on the left sidebar!`;
+    }
+
+    function escapeHtmlSimple(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function handleSend() {
+        let query = userInput.value.trim();
+        if (query === "") return;
+        
+        appendMessage(escapeHtmlSimple(query), 'user');
         userInput.value = '';
         
-        addTypingIndicator();
-        await new Promise(r => setTimeout(r, 250 + Math.random() * 250));
-        
-        const response = getSmartResponse(message, conversationHistory);
-        
-        removeTypingIndicator();
-        
-        const bubbleElement = createStreamingMessage();
-        await streamResponse(bubbleElement, response);
-        
-        conversationHistory.push({ role: "assistant", content: response });
-        
-        const streamingDiv = document.getElementById('streamingMessage');
-        if (streamingDiv) streamingDiv.removeAttribute('id');
-        
-        isThinking = false;
-        userInput.disabled = false;
-        sendBtn.disabled = false;
-        userInput.focus();
+        const answerHtml = getBotAnswer(query);
+        appendMessage(answerHtml, 'bot');
     }
     
-    clearChatBtn.addEventListener('click', () => {
-        conversationHistory = [];
-        messagesDiv.innerHTML = '';
-        const welcomeDiv = document.createElement('div');
-        welcomeDiv.className = 'message bot-message';
-        welcomeDiv.innerHTML = `
-            <div class="bubble bot-bubble">
-                🧹 Chat cleared! I'm ready to help with Topic 1: Marketing Research.<br><br>
-                Ask me about definition, importance, the 6-step process, research types, or qualities of researchers!
-            </div>
-            <div class="message-time">${getTime()}</div>
-        `;
-        messagesDiv.appendChild(welcomeDiv);
-        scrollToBottom();
-    });
-    
-    sendBtn.addEventListener('click', sendMessage);
+    sendButton.addEventListener('click', handleSend);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !isThinking && userInput.value.trim()) {
-            sendMessage();
-        }
+        if (e.key === 'Enter') handleSend();
     });
     
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    const topicChips = document.querySelectorAll('.topic-chip');
+    topicChips.forEach(chip => {
         chip.addEventListener('click', () => {
-            if (isThinking) return;
-            userInput.value = chip.textContent;
-            sendMessage();
+            const preQuestion = chip.getAttribute('data-question');
+            if (preQuestion) {
+                appendMessage(preQuestion, 'user');
+                const botAns = getBotAnswer(preQuestion);
+                appendMessage(botAns, 'bot');
+            }
         });
     });
     
-    userInput.focus();
+    window.addEventListener('load', () => {
+        scrollToBottom();
+    });
 </script>
 </body>
 </html>
