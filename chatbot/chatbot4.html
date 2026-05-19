@@ -1,703 +1,604 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Topic 4: Research Design | Marketing Research Assistant</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 4: Research Design | Chatbot</title>
 
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
-            background: #f5f7f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        .chat-container {
-            width: 100%;
-            max-width: 750px;
-            height: 90vh;
-            min-height: 650px;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #e8ece0;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .chat-header {
-            background: #2e7d32;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1b5e20;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar {
-            width: 42px;
-            height: 42px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #2e7d32;
-        }
-        .header-info h2 {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .header-info p {
-            color: #c8e6c9;
-            font-size: 0.7rem;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            color: white;
-        }
-        .clear-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-            transition: all 0.2s;
-        }
-        .clear-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            background: #ffffff;
-        }
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f0f2e8;
-            border-radius: 10px;
-        }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #bdc9a4;
-            border-radius: 10px;
-        }
+.chat-app {
+    width: 100%;
+    max-width: 1300px;
+    height: 90vh;
+    background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+    display: flex;
+    overflow: hidden;
+}
 
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .user-message { align-self: flex-end; }
-        .bot-message { align-self: flex-start; }
+.side-panel {
+    width: 290px;
+    background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
+    padding: 28px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-        .bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            word-wrap: break-word;
-        }
-        .user-bubble {
-            background: #2e7d32;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        .bot-bubble {
-            background: #f0f2e8;
-            color: #1a2e1f;
-            border-bottom-left-radius: 4px;
-        }
-        .message-time {
-            font-size: 0.65rem;
-            margin-top: 6px;
-            color: #8f9b7a;
-            padding-left: 12px;
-        }
+.side-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.side-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
 
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 10px 16px;
-            background: #f0f2e8;
-            border-radius: 20px;
-            width: fit-content;
-        }
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #2e7d32;
-            border-radius: 50%;
-            animation: blink 1.3s infinite ease-in-out;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8);}
-            30% { opacity: 1; transform: scale(1.2);}
-        }
+.brand {
+    margin-bottom: 28px;
+    flex-shrink: 0;
+}
 
-        .streaming-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.1em;
-            background-color: #2e7d32;
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blinkCursor 1s step-end infinite;
-        }
-        @keyframes blinkCursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+.brand h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-        .chat-input-area {
-            background: #ffffff;
-            padding: 16px;
-            border-top: 1px solid #e8ece0;
-        }
-        .input-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            background: #f8faf3;
-            border: 1px solid #d4dbc8;
-            border-radius: 28px;
-            padding: 4px 6px 4px 18px;
-            transition: all 0.2s;
-        }
-        .input-wrapper:focus-within {
-            border-color: #2e7d32;
-            box-shadow: 0 0 0 2px rgba(46,125,50,0.1);
-        }
-        .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 12px 0;
-            color: #1a2e1f;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .input-wrapper input::placeholder {
-            color: #b0bba0;
-        }
-        .input-wrapper button {
-            background: #2e7d32;
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .input-wrapper button:hover:not(:disabled) {
-            background: #1b5e20;
-            transform: scale(1.02);
-        }
-        .input-wrapper button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+.brand p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 6px;
+}
 
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .suggestion-chip {
-            background: #f0f2e8;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #2e7d32;
-            font-weight: 500;
-            border: 1px solid #d4dbc8;
-        }
-        .suggestion-chip:hover {
-            background: #2e7d32;
-            color: white;
-            border-color: #2e7d32;
-        }
+.topic-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 
-        .footer {
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 8px;
-            color: #b0bba0;
-            background: #ffffff;
-            border-top: 1px solid #e8ece0;
-        }
-        
-        .bot-bubble strong {
-            color: #2e7d32;
-        }
-    </style>
+.topic-section h4 {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.topic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+.topic-list::-webkit-scrollbar {
+    width: 4px;
+}
+.topic-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+.topic-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
+
+.topic-chip {
+    background: rgba(255,255,255,0.12);
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.topic-chip:hover {
+    background: #ffffff;
+    color: #1a3c2c;
+    transform: translateX(4px);
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fefefe;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid #e9edf2;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2e3a;
+}
+
+.chat-header span {
+    font-size: 0.75rem;
+    color: #5c6f87;
+}
+
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fafcff;
+}
+
+.messages-area::-webkit-scrollbar {
+    width: 6px;
+}
+.messages-area::-webkit-scrollbar-track {
+    background: #eef2f8;
+    border-radius: 8px;
+}
+.messages-area::-webkit-scrollbar-thumb {
+    background: #b9c8b2;
+    border-radius: 8px;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 24px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.bot-msg {
+    background: #f0f4f9;
+    border: 1px solid #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    color: #1e2a3a;
+}
+
+.user-msg {
+    background: #1a5d3c;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.input-row {
+    padding: 16px 24px 24px 24px;
+    border-top: 1px solid #eef2f8;
+    background: white;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 60px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-row input:focus {
+    border-color: #1a5d3c;
+    box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
+}
+
+.input-row button {
+    background: #1a5d3c;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-row button:hover {
+    background: #0e3f28;
+}
+
+@media (max-width: 700px) {
+    .side-panel { display: none; }
+    .message-bubble { max-width: 90%; }
+}
+</style>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="header-left">
-            <div class="avatar">🔬</div>
-            <div class="header-info">
-                <h2>Topic 4: Research Design Assistant</h2>
-                <p>Exploratory • Descriptive • Causal • Qualitative • Quantitative</p>
-            </div>
+
+<div class="chat-app">
+    <div class="side-panel">
+        <div class="brand">
+            <h2>📊 Marketing Research<br>& Analytics AI</h2>
+            <p>Topic 4: Research Design</p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <div class="badge">Learning Activities</div>
-            <button id="clearChatBtn" class="clear-btn">Clear</button>
+        <div class="topic-section">
+            <h4>📚 TOPIC 4: KEY CONCEPTS</h4>
+            <div class="topic-list">
+                <div class="topic-chip" data-question="What is research design? Why is it important?">📐 Research Design Definition</div>
+                <div class="topic-chip" data-question="Difference between qualitative and quantitative research">🔬 Qualitative vs Quantitative</div>
+                <div class="topic-chip" data-question="What is exploratory research?">🔍 Exploratory Research</div>
+                <div class="topic-chip" data-question="What is descriptive research? 6 Ws">📝 Descriptive Research (6 Ws)</div>
+                <div class="topic-chip" data-question="What is causal research? Conditions for causality">⚡ Causal Research & Causality</div>
+                <div class="topic-chip" data-question="Cross-sectional vs Longitudinal research">📊 Cross-sectional vs Longitudinal</div>
+                <div class="topic-chip" data-question="Primary vs Secondary data sources">💾 Primary vs Secondary Data</div>
+                <div class="topic-chip" data-question="Internal vs External secondary data sources">🏢 Internal vs External Sources</div>
+                <div class="topic-chip" data-question="What is a focus group? Steps and advantages">👥 Focus Groups</div>
+                <div class="topic-chip" data-question="What is depth interview? Techniques used">🎙️ Depth Interview (Laddering, Probing, Symbolic Analysis)</div>
+                <div class="topic-chip" data-question="What are projective techniques? Types">🎭 Projective Techniques</div>
+                <div class="topic-chip" data-question="Types of survey methods">📋 Survey Methods (Personal, Mail, Telephone, Electronic)</div>
+                <div class="topic-chip" data-question="What is unit of analysis? Types">🎯 Unit of Analysis (Individual, Dyad, Group, Organization)</div>
+                <div class="topic-chip" data-question="Conditions for causality in research">🔗 3 Conditions for Causality</div>
+                <div class="topic-chip" data-question="Word association and sentence completion techniques">📝 Word Association & Sentence Completion</div>
+            </div>
         </div>
     </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="bubble bot-bubble">
-                🔬 <strong>Welcome to Topic 4: Research Design!</strong><br><br>
-                I'm here to help you master the blueprint for marketing research projects.<br><br>
-                <strong>📌 Learning Outcomes Covered:</strong><br><br>
-                ✅ <strong>Types of Research Designs</strong> – Understand and differentiate<br>
-                ✅ <strong>Evaluate Relevance</strong> – Choose the right design for your problem<br>
-                ✅ <strong>Plan Research Projects</strong> – Create a good research blueprint<br><br>
-                <strong>🔍 What I can help with:</strong><br>
-                • <strong>Qualitative vs Quantitative</strong> – Differences, uses, complementarity<br>
-                • <strong>Exploratory Research</strong> – Focus groups, depth interviews, projective techniques<br>
-                • <strong>Descriptive Research</strong> – Cross-sectional, longitudinal, 6 Ws<br>
-                • <strong>Causal Research</strong> – Experiments, 3 conditions for causality<br>
-                • <strong>Primary vs Secondary Data</strong> – Sources, advantages, disadvantages<br>
-                • <strong>Survey Methods</strong> – Personal, telephone, mail, electronic interviews<br>
-                • <strong>Unit of Analysis</strong> – Individual, dyad, group, organization<br><br>
-                Just type your question below or click a suggestion! 🎯
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3>📐 Topic 4: Research Design</h3>
+            <span>Based on your complete lecture notes | Exploratory | Descriptive | Causal | Qualitative | Quantitative</span>
+        </div>
+        <div class="messages-area" id="chatMessages">
+            <div class="message-bubble bot-msg">
+                👋 <strong>Welcome to Topic 4!</strong> I'm your Marketing Research AI for <strong>Research Design</strong>.<br><br>
+                📖 Based on your lecture notes, I can teach you about:<br>
+                • <strong>Research Design</strong> - Definition, importance, as a roadmap<br>
+                • <strong>Qualitative vs Quantitative</strong> research methodologies<br>
+                • <strong>Exploratory Research</strong> - Focus groups, depth interviews, projective techniques<br>
+                • <strong>Descriptive Research</strong> - The 6 Ws (Who, What, When, Where, Why, Way)<br>
+                • <strong>Causal Research</strong> - 3 conditions for causality, experimentation<br>
+                • <strong>Cross-sectional vs Longitudinal</strong> designs<br>
+                • <strong>Primary vs Secondary Data</strong> - Internal and external sources<br>
+                • <strong>Unit of Analysis</strong> - Individual, Dyad, Group, Organization<br><br>
+                Ask me anything from Topic 4, or click any topic on the left!
             </div>
-            <div class="message-time">Just now</div>
         </div>
-    </div>
-
-    <div class="chat-input-area">
-        <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ask about research design, qualitative vs quantitative, exploratory research, survey methods..." autocomplete="off">
-            <button id="sendBtn">➤</button>
+        <div class="input-row">
+            <input type="text" id="userQuery" placeholder="e.g., What is the difference between qualitative and quantitative research?..." autocomplete="off">
+            <button id="sendBtn">Send →</button>
         </div>
-        <div class="suggestions" id="suggestionsPanel">
-            <div class="suggestion-chip">What is research design? Why is it important?</div>
-            <div class="suggestion-chip">Differences between qualitative and quantitative research</div>
-            <div class="suggestion-chip">Exploratory research methods (focus groups, depth interviews)</div>
-            <div class="suggestion-chip">Descriptive research: cross-sectional vs longitudinal</div>
-            <div class="suggestion-chip">3 conditions for causality in causal research</div>
-            <div class="suggestion-chip">Primary vs secondary data: differences and sources</div>
-            <div class="suggestion-chip">Types of survey methods (personal, mail, phone, electronic)</div>
-            <div class="suggestion-chip">Unit of analysis: individual, dyad, group, organization</div>
-        </div>
-        <div class="footer">💡 Based on your Topic 4 module • Research Design • Exploratory • Descriptive • Causal • Green Theme</div>
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // TOPIC 4: RESEARCH DESIGN
-    // Based on complete module content: Research Design Types, Qualitative/Quantitative,
-    // Exploratory/Descriptive/Causal, Primary/Secondary Data, Survey Methods, Unit of Analysis
-    // ============================================================
+    const messagesContainer = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userQuery');
+    const sendButton = document.getElementById('sendBtn');
+
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message-bubble');
+        msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'bot-msg');
+        msgDiv.innerHTML = text;
+        messagesContainer.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    function getBotAnswer(questionText) {
+        const q = questionText.toLowerCase();
+        
+        // Research Design Definition
+        if ((q.includes('research design') && (q.includes('what') || q.includes('definition') || q.includes('important'))) || (q.includes('roadmap') && q.includes('research'))) {
+            return `<b>📐 What is Research Design?</b><br><br>
+            A research design entails the <b>framework or plan</b> for a research project.<br><br>
+            • Includes procedures necessary for obtaining information needed to structure or solve a marketing research problem<br>
+            • A good research design <b>minimizes the danger of haphazard collection of information</b><br>
+            • Ensures the decision maker has the information needed<br>
+            • Like a <b>road-map</b> to avoid us from being lost<br>
+            • Researchers must keep firmly in mind the <b>objectives of the research</b> when selecting a research design`;
+        }
+        
+        // Qualitative vs Quantitative
+        if ((q.includes('qualitative') && q.includes('quantitative')) || (q.includes('difference between') && (q.includes('qualitative') || q.includes('quantitative')))) {
+            return `<b>🔬 Qualitative vs Quantitative Research</b><br><br>
+            <b>Qualitative Research:</b><br>
+            • Unstructured, exploratory research methodology<br>
+            • Based on small sample<br>
+            • Provides insight and understanding of the problem setting<br>
+            • Aims to: define problem clearly, suggest hypotheses, generate new ideas, pre-test questionnaires<br><br>
+            <b>Quantitative Research:</b><br>
+            • Seeks to quantify data<br>
+            • Applies statistical analysis<br>
+            • Must be preceded by appropriate qualitative research<br><br>
+            <b>Key principle:</b> Both are <b>complementary</b>, not in competition with each other. Both provide rich insights for marketing strategies.`;
+        }
+        
+        // Exploratory Research
+        if (q.includes('exploratory') || (q.includes('explore') && q.includes('research'))) {
+            return `<b>🔍 Exploratory Research</b><br><br>
+            Exploratory research is a type of investigation that is <b>not regarded as conclusive</b> in its final research outcome.<br><br>
+            <b>Purpose:</b> To explore or search through a problem or situation to provide insights and understanding.<br><br>
+            <b>Useful for:</b><br>
+            • Formulating or defining a problem more precisely<br>
+            • Identifying alternative courses of actions<br>
+            • Developing hypotheses<br>
+            • Isolating key variables and relationships for further conclusive research<br><br>
+            <b>Methods include:</b> Secondary data analysis, focus groups, depth interviews, projective techniques.`;
+        }
+        
+        // Descriptive Research (6 Ws)
+        if ((q.includes('descriptive') && q.includes('research')) || q.includes('6 ws') || (q.includes('who what when where why'))) {
+            return `<b>📝 Descriptive Research</b><br><br>
+            Descriptive research is a kind of <b>conclusive research</b> whose main objective is to describe the problem in a systematic way.<br><br>
+            <b>Guided by the 6 Ws enquiries:</b><br>
+            • <b>Who?</b> - Who is involved?<br>
+            • <b>What?</b> - What is happening?<br>
+            • <b>When?</b> - When does it happen?<br>
+            • <b>Where?</b> - Where does it happen?<br>
+            • <b>Why?</b> - Why does it happen?<br>
+            • <b>Way?</b> - In what way does it happen?<br><br>
+            <b>Methods:</b> Survey and observation methods are commonly employed.`;
+        }
+        
+        // Causal Research
+        if ((q.includes('causal') && q.includes('research')) || (q.includes('cause and effect') && q.includes('research'))) {
+            return `<b>⚡ Causal Research</b><br><br>
+            Causal research is a type of <b>conclusive research</b> whose major objective is to obtain evidence regarding <b>cause and effect (causal) relationship</b>.<br><br>
+            <b>Purpose:</b><br>
+            • Understand which variables are the causes (IV) and which are effects (DV)<br>
+            • Determine the nature of the relationship between causal variables and effects<br><br>
+            <b>Main method:</b> <b>Experimentation</b> - manipulating independent variables in a controlled environment<br><br>
+            <b>Requires:</b> Planned and structured design`;
+        }
+        
+        // Conditions for Causality
+        if ((q.includes('conditions for causality') || q.includes('causality conditions') || (q.includes('3 conditions') && q.includes('causal')))) {
+            return `<b>🔗 3 Conditions for Causality</b><br><br>
+            <b>1. Logical time sequence</b><br>
+            The cause must either precede or occur simultaneously with effect. It cannot occur later. Independent variable must occur before or at the same time as dependent variable.<br><br>
+            <b>2. Concomitant variation</b><br>
+            The extent to which the independent variable (cause) and dependent variable (effect) vary together as hypothesized. The stronger the relationship, the more confident we can be.<br><br>
+            <b>3. Control for other possible causal factors</b><br>
+            All other factors that can influence the relationship must be eliminated as much as possible. This condition can never be met completely - causality can never be absolute because random error exists.`;
+        }
+        
+        // Cross-sectional vs Longitudinal
+        if ((q.includes('cross-sectional') || q.includes('longitudinal')) && (q.includes('vs') || q.includes('difference'))) {
+            return `<b>📊 Cross-sectional vs Longitudinal Research</b><br><br>
+            <b>Cross-sectional Research:</b><br>
+            • Collection of information from sample(s) of target population at <b>one point in time only</b><br>
+            • Single cross-sectional: one sample of respondents<br>
+            • Multiple cross-sectional: two or more samples<br>
+            • Cohort analysis: series of surveys at appropriate time intervals<br><br>
+            <b>Longitudinal Research:</b><br>
+            • Fixed sample of population elements measured <b>repeatedly across different points of time</b><br>
+            • Sample remains the same over time<br>
+            • Panel: households agreeing to provide information at specified intervals<br><br>
+            <b>Advantages of longitudinal:</b> More reliable, identifies patterns over time<br>
+            <b>Disadvantages:</b> Expensive, time-consuming, requires cooperation, sophisticated design`;
+        }
+        
+        // Primary vs Secondary Data
+        if ((q.includes('primary data') && q.includes('secondary data')) || (q.includes('difference between') && (q.includes('primary') || q.includes('secondary')))) {
+            return `<b>💾 Primary vs Secondary Data</b><br><br>
+            <b>Primary Data:</b><br>
+            • Originated by researcher for specific purpose of addressing research problem<br>
+            • Original data, gathered fresh from the source for current study<br>
+            • Expensive and time-consuming to obtain<br>
+            • Gives information on the particular question that needs to be answered<br><br>
+            <b>Secondary Data:</b><br>
+            • Data collected for purposes other than the problem at hand<br>
+            • Can be located quickly and inexpensively<br>
+            • May apply to an industry or specific type of business<br><br>
+            <b>Best practice:</b> Start with secondary data, then collect primary data if needed.`;
+        }
+        
+        // Internal vs External Sources
+        if ((q.includes('internal') && q.includes('external') && q.includes('source')) || (q.includes('secondary data sources'))) {
+            return `<b>🏢 Internal vs External Secondary Data Sources</b><br><br>
+            <b>Internal Sources:</b><br>
+            • Accounting, marketing and production records<br>
+            • Information system personnel<br>
+            • Sales-force personnel<br>
+            • Other individuals within organization<br><br>
+            <b>External Sources:</b><br>
+            • Government departments/agencies<br>
+            • Libraries<br>
+            • Private companies<br>
+            • Trade associations<br>
+            • Non-profit organizations, NGOs<br>
+            • Books and periodicals<br>
+            • Media sources (broadcast and print)<br>
+            • Commercial sources (market share data, scanner data, demographic updates)`;
+        }
+        
+        // Focus Groups
+        if (q.includes('focus group') || (q.includes('focus') && q.includes('group'))) {
+            return `<b>👥 Focus Groups</b><br><br>
+            Focus group interview conducted by a <b>trained moderator</b> in a non-structured and natural manner with a small group.<br><br>
+            <b>Characteristics:</b><br>
+            • Generally 8-12 members<br>
+            • Homogenous in demographic and socioeconomic characteristics<br>
+            • Sessions should be relaxed and natural<br>
+            • Moderator prepares a discussion guide<br>
+            • Often videotaped for replay, transcription and analysis<br><br>
+            <b>Variations:</b> Two-way focus group, dual-moderator group<br><br>
+            <b>Advantages (10 S's):</b> Synergism, Serendipity, Snowballing, Stimulation, Security, Spontaneity, Specialization, Scientific scrutiny, Structure, Speed<br><br>
+            <b>Disadvantages:</b> Can be misused/abused, results depend on moderator skill, difficult analysis`;
+        }
+        
+        // Depth Interview
+        if (q.includes('depth interview') || (q.includes('depth') && q.includes('interview')) || q.includes('laddering') || q.includes('probing') || q.includes('symbolic analysis')) {
+            return `<b>🎙️ Depth Interview</b><br><br>
+            Unstructured and direct way of obtaining information on a <b>one-to-one basis</b> (30 min - 1+ hour).<br><br>
+            <b>Three techniques:</b><br>
+            <b>1. Laddering:</b> Questioning proceeds from product characteristics to user characteristics; taps into consumer's network of meanings<br>
+            <b>2. Hidden issue questioning:</b> Locates personal sore spots related to deeply felt personal concerns<br>
+            <b>3. Symbolic analysis:</b> Analyzes symbolic meaning of objects by comparing with opposites<br><br>
+            <b>Advantages:</b> Greater depth of insights, attributes responses directly to respondent, free exchange of information<br><br>
+            <b>Disadvantages:</b> Expensive skilled interviewers, results susceptible to interviewer influence, difficult analysis`;
+        }
+        
+        // Projective Techniques
+        if (q.includes('projective technique') || (q.includes('word association') || q.includes('sentence completion') || q.includes('picture response') || q.includes('cartoon'))) {
+            return `<b>🎭 Projective Techniques</b><br><br>
+            An unstructured, indirect form of questioning that encourages respondents to project their underlying motivations, beliefs, attitudes, or feelings.<br><br>
+            <b>Common techniques:</b><br>
+            <b>• Word association:</b> Present words, ask for first word that comes to mind<br>
+            <b>• Sentence completion:</b> Complete partial sentences with first word/phrase<br>
+            <b>• Construction:</b> Construct a response (picture response: tell a story about picture; cartoon tests: suggest dialogue)<br>
+            <b>• Expressive:</b> Role playing and third-person technique - express feelings/attitudes of others<br><br>
+            <b>Advantages:</b> Increases validity by disguising purpose, helpful for subconscious motivations<br>
+            <b>Disadvantages:</b> Risk of interpretation bias, expensive, requires highly trained interviewers`;
+        }
+        
+        // Survey Methods
+        if ((q.includes('survey method') || q.includes('personal interview') || q.includes('mail interview') || q.includes('telephone interview') || q.includes('electronic interview'))) {
+            return `<b>📋 Types of Survey Methods</b><br><br>
+            <b>Personal Interview:</b><br>
+            • In-Home (respondents interviewed at home/office)<br>
+            • Mall-intercept (shoppers intercepted for short duration)<br>
+            • Computer-assisted (respondents answer via computer terminal)<br><br>
+            <b>Telephone Interview:</b><br>
+            • Traditional (interviewed via telephone)<br>
+            • Computer-assisted (computerized telephone interviews)<br><br>
+            <b>Mail Interview:</b><br>
+            • Mail (return questionnaires via postal)<br>
+            • Mail panel (questionnaires on agreed participants)<br><br>
+            <b>Fax Interview:</b> Answer and return short questionnaires via fax<br><br>
+            <b>Electronic Interview:</b><br>
+            • Email (answer and return via email)<br>
+            • Internet (complete survey on web location)<br>
+            • Mobile (quick survey via SMS)`;
+        }
+        
+        // Unit of Analysis
+        if (q.includes('unit of analysis') || (q.includes('individual') && q.includes('dyad')) || (q.includes('group') && q.includes('organization'))) {
+            return `<b>🎯 Unit of Analysis</b><br><br>
+            The unit of analysis is the <b>level of aggregation</b> of the data collected. Must be clearly determined to avoid confusion during data analysis.<br><br>
+            <b>Four types:</b><br>
+            <b>1. Individual:</b> Each individual response as individual data source (e.g., patient perception of hospital quality)<br><br>
+            <b>2. Dyad:</b> Two-person groups or pairs providing dyadic responses (e.g., doctor-patient interactions)<br><br>
+            <b>3. Group:</b> More than two persons interactions (e.g., patient group interactions)<br><br>
+            <b>4. Organization:</b> Patterns of interactions for employees of hospitals`;
+        }
+        
+        // Word association / Sentence completion specific
+        if ((q.includes('word association') || q.includes('sentence completion')) && !q.includes('projective')) {
+            return `<b>📝 Word Association & Sentence Completion</b><br><br>
+            <b>Word Association:</b><br>
+            • Subject presented with list of words, one at a time<br>
+            • Asked to respond with the first word that comes to mind<br>
+            • Both verbal and non-verbal responses recorded<br>
+            • Reveals each individual's true feelings about the subject<br>
+            • Challenge: Interpreting the subject is difficult<br><br>
+            <b>Sentence Completion:</b><br>
+            • Based on assumption of free association<br>
+            • Respondents complete partial sentences with first word/phrase that comes to mind<br>
+            • Answers tend to be more complete than word association<br>
+            • However, the intention of the study is more apparent`;
+        }
+        
+        // Default
+        return `<b>📘 Topic 4: Research Design</b><br><br>
+        Based on your lecture notes, I can help you with:<br><br>
+        📐 <b>Research Design</b> - Framework, plan, roadmap for research<br>
+        🔬 <b>Qualitative vs Quantitative</b> - Differences and complementarity<br>
+        🔍 <b>Exploratory Research</b> - Focus groups, depth interviews, projective techniques<br>
+        📝 <b>Descriptive Research</b> - The 6 Ws (Who, What, When, Where, Why, Way)<br>
+        ⚡ <b>Causal Research</b> - 3 conditions for causality, experimentation<br>
+        📊 <b>Cross-sectional vs Longitudinal</b> - Single vs multiple time points<br>
+        💾 <b>Primary vs Secondary Data</b> - Internal and external sources<br>
+        👥 <b>Focus Groups</b> - 8-12 members, moderator, advantages/disadvantages<br>
+        🎙️ <b>Depth Interview</b> - Laddering, probing, symbolic analysis<br>
+        🎭 <b>Projective Techniques</b> - Word association, sentence completion, construction, expressive<br>
+        📋 <b>Survey Methods</b> - Personal, mail, telephone, electronic, fax<br>
+        🎯 <b>Unit of Analysis</b> - Individual, dyad, group, organization<br><br>
+        Try asking: <i>"What is the difference between qualitative and quantitative research?"</i> or <i>"Explain the 3 conditions for causality"</i>`;
+    }
+
+    function escapeHtmlSimple(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function handleSend() {
+        let query = userInput.value.trim();
+        if (query === "") return;
+        
+        appendMessage(escapeHtmlSimple(query), 'user');
+        userInput.value = '';
+        
+        const answerHtml = getBotAnswer(query);
+        appendMessage(answerHtml, 'bot');
+    }
     
-    let conversationHistory = [];
-    let isThinking = false;
-
-    const messagesDiv = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChatBtn');
-
-    function getSmartResponse(userMessage, history) {
-        const q = userMessage.toLowerCase().trim();
-        
-        // ========== RESEARCH DESIGN DEFINITION ==========
-        if ((q.includes("what is research design") || q.includes("research design definition") || q.includes("blueprint")) && !q.includes("qualitative")) {
-            return `🏗️ **Research Design – The Blueprint for Marketing Research**\n\n` +
-                   `**Definition:**\n` +
-                   `A research design entails the framework or plan for a research project. It includes the procedures necessary for obtaining the information needed to structure or solve a marketing research problem.\n\n` +
-                   `**Why is it important?**\n` +
-                   `• Minimizes the danger of haphazard collection of information\n` +
-                   `• Ensures the decision maker has the information needed\n` +
-                   `• Acts like a road-map to avoid getting lost\n` +
-                   `• Keeps researcher focused on research objectives\n\n` +
-                   `**Key Principle:**\n` +
-                   `The researcher must always keep firmly in mind the objectives of the research when selecting a research design.\n\n` +
-                   `**Major Types of Research Designs:**\n` +
-                   `📊 Exploratory Research – Provides insights and understanding\n` +
-                   `📋 Descriptive Research – Describes problems systematically\n` +
-                   `⚡ Causal Research – Examines cause-and-effect relationships\n\n` +
-                   `💡 *A good research design is like a road-map – it prevents you from getting lost*`;
-        }
-        
-        // ========== QUALITATIVE VS QUANTITATIVE ==========
-        if ((q.includes("qualitative") && q.includes("quantitative")) || q.includes("difference between qualitative") || q.includes("qualitative vs quantitative")) {
-            return `📊 **Qualitative vs Quantitative Research – Key Differences**\n\n` +
-                   `**QUALITATIVE RESEARCH (Exploratory)**\n` +
-                   `• Unstructured, exploratory methodology\n` +
-                   `• Based on small samples\n` +
-                   `• Provides insights and understanding of problem setting\n` +
-                   `• Aims to:\n` +
-                   `  - Define the problem more clearly\n` +
-                   `  - Suggest hypotheses for subsequent testing\n` +
-                   `  - Generate new ideas/concepts\n` +
-                   `  - Get preliminary reactions\n` +
-                   `  - Pre-test structured questionnaires\n` +
-                   `• Findings should NOT be generalized to population\n\n` +
-                   `**QUANTITATIVE RESEARCH (Conclusive)**\n` +
-                   `• Seeks to quantify data\n` +
-                   `• Applies statistical analysis\n` +
-                   `• Larger sample sizes\n` +
-                   `• Findings can be generalized\n` +
-                   `• Usually preceded by qualitative research\n\n` +
-                   `**Key Principle:**\n` +
-                   `Qualitative and quantitative research are COMPLEMENTARY, not in competition. Both provide rich insights for successful marketing strategies.\n\n` +
-                   `**Primary Data Types:**\n` +
-                   `• Qualitative originates from exploratory methods (focus groups, depth interviews)\n` +
-                   `• Quantitative originates from surveys, experiments, structured observation\n\n` +
-                   `💡 *A sound principle: view both as complementary, not competitive*`;
-        }
-        
-        // ========== EXPLORATORY RESEARCH ==========
-        if ((q.includes("exploratory research") || q.includes("exploratory")) && !q.includes("descriptive") && !q.includes("causal")) {
-            return `🔍 **Exploratory Research – Gaining Insights & Understanding**\n\n` +
-                   `**Definition:**\n` +
-                   `A type of investigation that is not regarded as conclusive in its final research outcome. It explores or searches through a problem to provide insights and understanding.\n\n` +
-                   `**Purposes:**\n` +
-                   `• Formulate or define a problem more precisely\n` +
-                   `• Identify alternative courses of action\n` +
-                   `• Develop hypotheses\n` +
-                   `• Isolate key variables and relationships for further conclusive research\n\n` +
-                   `**Exploratory using SECONDARY Data:**\n` +
-                   `• Internal sources (accounting, marketing records, sales-force)\n` +
-                   `• External sources (government, libraries, commercial firms)\n` +
-                   `• Books, periodicals, professional journals\n` +
-                   `• Media sources, commercial data firms\n\n` +
-                   `**Exploratory using PRIMARY Data:**\n` +
-                   `• Focus groups (8-12 participants, trained moderator)\n` +
-                   `• Depth interviews (one-to-one, 30-60 minutes)\n` +
-                   `• Projective techniques (word association, sentence completion, construction, expressive)\n\n` +
-                   `**Focus Group Advantages:** Synergism, serendipity, snowballing, stimulation, security, spontaneity, specialization, scientific scrutiny, structure, speed\n\n` +
-                   `**Depth Interview Techniques:** Laddering, hidden issue questioning, symbolic analysis\n\n` +
-                   `💡 *Exploratory research is useful when the problem is not clearly defined*`;
-        }
-        
-        // ========== DESCRIPTIVE RESEARCH ==========
-        if ((q.includes("descriptive research") || q.includes("descriptive")) && !q.includes("causal") && !q.includes("exploratory")) {
-            return `📋 **Descriptive Research – Systematic Description of Problems**\n\n` +
-                   `**Definition:**\n` +
-                   `A kind of conclusive research whose main objective is to describe the problem in a systematic way. It describes functions, nature, characteristics, and associations of variables.\n\n` +
-                   `**The 6 Ws Enquiries:**\n` +
-                   `• WHO? – Who is involved?\n` +
-                   `• WHAT? – What is happening?\n` +
-                   `• WHEN? – When does it occur?\n` +
-                   `• WHERE? – Where does it occur?\n` +
-                   `• WHY? – Why does it happen?\n` +
-                   `• WAY? – In what way does it happen?\n\n` +
-                   `**Types of Descriptive Research:**\n\n` +
-                   `**Cross-Sectional Research**\n` +
-                   `• Information collected from sample(s) at ONE point in time only\n` +
-                   `• Single cross-sectional: one sample of respondents\n` +
-                   `• Multiple cross-sectional: two or more samples\n` +
-                   `• Cohort analysis: series of surveys at appropriate time intervals\n\n` +
-                   `**Longitudinal Research**\n` +
-                   `• Fixed sample measured repeatedly across different points of time\n` +
-                   `• Same sample remains over time\n` +
-                   `• Panel = term used interchangeably with longitudinal design\n` +
-                   `• Advantages: more reliable data, identifies patterns over time\n` +
-                   `• Disadvantages: expensive, time-consuming, requires respondent cooperation\n\n` +
-                   `**Common Methods:** Survey and observation\n\n` +
-                   `💡 *Descriptive research answers the question "What is happening?"*`;
-        }
-        
-        // ========== CAUSAL RESEARCH / CAUSALITY ==========
-        if ((q.includes("causal research") || q.includes("causality") || q.includes("cause and effect") || q.includes("experimentation")) && !q.includes("descriptive")) {
-            return `⚡ **Causal Research – Understanding Cause and Effect**\n\n` +
-                   `**Definition:**\n` +
-                   `A type of conclusive research whose major objective is to obtain evidence regarding cause-and-effect (causal) relationships.\n\n` +
-                   `**Purpose:**\n` +
-                   `• Understand which variables are causes (independent variables)\n` +
-                   `• Understand which variables are effects (dependent variables)\n` +
-                   `• Determine the nature of the relationship between causal variables and effects\n\n` +
-                   `**Main Method:** Experimentation\n\n` +
-                   `**3 Conditions for Causality:**\n\n` +
-                   `**1. Logical Time Sequence**\n` +
-                   `• Cause must precede or occur simultaneously with effect\n` +
-                   `• Cannot occur later\n` +
-                   `• Independent variable must occur before or at same time as dependent variable\n\n` +
-                   `**2. Concomitant Variation**\n` +
-                   `• Extent to which IV and DV vary together as hypothesized\n` +
-                   `• If advertising increases → sales should increase\n` +
-                   `• If advertising decreases → sales should decrease\n` +
-                   `• Stronger relationship = more confidence\n\n` +
-                   `**3. Control for Other Possible Causal Factors**\n` +
-                   `• All other factors that can influence the relationship must be eliminated as much as possible\n` +
-                   `• Causality can never be absolute (random error exists)\n` +
-                   `• Highly controlled environment minimizes error\n\n` +
-                   `**Key Distinction:**\n` +
-                   `• Descriptive research determines degree of association\n` +
-                   `• Causal research examines causality through manipulation in controlled environment\n\n` +
-                   `💡 *Causality can never be absolute, but strong designs increase confidence*`;
-        }
-        
-        // ========== PRIMARY VS SECONDARY DATA ==========
-        if ((q.includes("primary data") && q.includes("secondary data")) || q.includes("difference between primary") || q.includes("primary vs secondary")) {
-            return `📁 **Primary vs Secondary Data – Key Differences**\n\n` +
-                   `**PRIMARY DATA**\n` +
-                   `• Originated by the researcher for specific purpose of addressing research problem\n` +
-                   `• Original data, gathered fresh from the source\n` +
-                   `• Gives information on the particular question or problem\n` +
-                   `• Expensive and time-consuming to obtain\n` +
-                   `• Examples:\n` +
-                   `  - Focus groups, depth interviews\n` +
-                   `  - Surveys, questionnaires\n` +
-                   `  - Experiments, observations\n` +
-                   `  - Projective techniques\n\n` +
-                   `**SECONDARY DATA**\n` +
-                   `• Data collected for purposes other than the problem at hand\n` +
-                   `• Can be located quickly and inexpensively\n` +
-                   `• Already exists\n` +
-                   `• Internal Sources:\n` +
-                   `  - Accounting, marketing, production records\n` +
-                   `  - Information system personnel\n` +
-                   `  - Sales-force personnel\n` +
-                   `  - Other individuals within organization\n` +
-                   `• External Sources:\n` +
-                   `  - Government departments/agencies\n` +
-                   `  - Libraries, private companies\n` +
-                   `  - Trade associations, NGOs\n` +
-                   `  - Books, periodicals, journals\n` +
-                   `  - Media sources (broadcast, print)\n` +
-                   `  - Commercial sources (market share data, scanner data)\n\n` +
-                   `**Key Principle:**\n` +
-                   `Secondary data should be explored first before collecting expensive primary data.\n\n` +
-                   `💡 *Secondary data is quick and inexpensive; primary data is specific but costly*`;
-        }
-        
-        // ========== SURVEY METHODS ==========
-        if (q.includes("survey methods") || q.includes("personal interview") || q.includes("telephone interview") || q.includes("mail interview") || q.includes("electronic interview")) {
-            return `📞 **Types of Survey Methods in Marketing Research**\n\n` +
-                   `**1. PERSONAL INTERVIEW**\n` +
-                   `• In-Home – Respondents interviewed in homes/offices\n` +
-                   `• Mall-intercept – Shoppers intercepted for short duration\n` +
-                   `• Computer-assisted – Respondents answer via computer terminal\n` +
-                   `• Advantages: High response rate, detailed responses\n` +
-                   `• Disadvantages: Expensive, interviewer bias\n\n` +
-                   `**2. TELEPHONE INTERVIEW**\n` +
-                   `• Traditional – Interviewed via telephone\n` +
-                   `• Computer-assisted – Computerized telephone interviews (CATI)\n` +
-                   `• Advantages: Fast, good response rate, wide geographic coverage\n` +
-                   `• Disadvantages: Limited duration, no visual aids\n\n` +
-                   `**3. MAIL INTERVIEW**\n` +
-                   `• Mail – Respondents answer and return via postal service\n` +
-                   `• Mail panel – Questionnaire survey on pre-recruited respondents\n` +
-                   `• Advantages: Geographic flexibility, no interviewer bias\n` +
-                   `• Disadvantages: Low response rate, slow, no clarification\n\n` +
-                   `**4. FAX INTERVIEW**\n` +
-                   `• Respondents answer and return short questionnaires via fax\n` +
-                   `• Good for quick, short surveys to businesses\n\n` +
-                   `**5. ELECTRONIC INTERVIEW**\n` +
-                   `• Email – Answer and return via email\n` +
-                   `• Internet – Complete survey on web location\n` +
-                   `• Mobile – Quick surveys via SMS\n` +
-                   `• Advantages: Fast, low cost, easy data entry\n` +
-                   `• Disadvantages: Coverage bias, spam issues\n\n` +
-                   `**Choice Factors:**\n` +
-                   `• Must consider appropriateness for reliable and valid data\n` +
-                   `• Advancements in ICT provide increasing communication options\n\n` +
-                   `💡 *The choice of mode must be appropriate for reliable and valid data*`;
-        }
-        
-        // ========== UNIT OF ANALYSIS ==========
-        if (q.includes("unit of analysis") || q.includes("unit of analysis")) {
-            return `👥 **Unit of Analysis – The Level of Aggregation**\n\n` +
-                   `**Definition:**\n` +
-                   `The level of aggregation of the data collected. Must be clearly determined to avoid confusion, especially during data analysis.\n\n` +
-                   `**4 Types of Unit of Analysis:**\n\n` +
-                   `**1. INDIVIDUAL** – Most common in marketing research\n` +
-                   `• Each individual response as an individual data source\n` +
-                   `• Example: Patient-perception of hospital quality (unit = individual patients)\n` +
-                   `• Example: Consumer attitudes, employee satisfaction\n\n` +
-                   `**2. DYAD (Two-person groups or pairs)**\n` +
-                   `• Provides dyadic responses\n` +
-                   `• Example: Doctor-patient interactions\n` +
-                   `• Example: Buyer-seller relationships\n` +
-                   `• Example: Married couples, supervisor-subordinate\n\n` +
-                   `**3. GROUP (More than two persons)**\n` +
-                   `• Group interactions and patterns\n` +
-                   `• Example: Patient groups in hospital settings\n` +
-                   `• Example: Work teams, focus groups, departments\n\n` +
-                   `**4. ORGANIZATION**\n` +
-                   `• Organizational-level analysis\n` +
-                   `• Example: Patterns of interactions for hospital employees\n` +
-                   `• Example: Company performance, departmental effectiveness\n` +
-                   `• Example: Franchise systems, retail chains\n\n` +
-                   `**Why it matters:**\n` +
-                   `• Affects research design and data collection\n` +
-                   `• Determines sampling strategy\n` +
-                   `• Influences measurement and analysis decisions\n` +
-                   `• Must be specified BEFORE data collection\n\n` +
-                   `💡 *Clearly defining unit of analysis prevents confusion during data analysis*`;
-        }
-        
-        // ========== PROJECTIVE TECHNIQUES ==========
-        if (q.includes("projective technique") || q.includes("word association") || q.includes("sentence completion") || q.includes("cartoon test")) {
-            return `🎭 **Projective Techniques – Uncovering Hidden Motivations**\n\n` +
-                   `**Definition:**\n` +
-                   `An unstructured, indirect form of questioning that encourages respondents to project their underlying motivations, beliefs, attitudes, or feelings.\n\n` +
-                   `**Common Techniques:**\n\n` +
-                   `**1. Word Association**\n` +
-                   `• Subject presented with list of words, asked to respond with first word that comes to mind\n` +
-                   `• Records verbal and non-verbal responses\n` +
-                   `• Reveals individual's true feelings\n` +
-                   `• Challenge: Interpreting the subject is difficult\n\n` +
-                   `**2. Sentence Completion**\n` +
-                   `• Respondents complete partial sentences with first word/phrase\n` +
-                   `• Based on assumption of free association\n` +
-                   `• Answers tend to be more complete than word association\n` +
-                   `• Downside: Intent of study is more apparent\n\n` +
-                   `**3. Construction Techniques**\n` +
-                   `• Picture response – Respondent tells story describing picture\n` +
-                   `• Cartoon tests – Suggest dialogue for cartoon characters\n` +
-                   `• Collage construction – Draw or create visual representation\n` +
-                   `• Reveals personality through interpretation\n\n` +
-                   `**4. Expressive Techniques**\n` +
-                   `• Role playing – Act out situation\n` +
-                   `• Third-person technique – Describe feelings/attitudes of others\n` +
-                   `• Respondents express others' feelings, not their own\n\n` +
-                   `**Advantages:**\n` +
-                   `• Increases validity by disguising purpose\n` +
-                   `• Helpful when motivations operate at subconscious level\n\n` +
-                   `**Disadvantages:**\n` +
-                   `• Risk of interpretation bias\n` +
-                   `• Expensive (requires highly trained interviewers)\n` +
-                   `• Skilled interpreters needed for analysis\n\n` +
-                   `💡 *Projective techniques are useful when respondents may intentionally or unintentionally mislead*`;
-        }
-        
-        // ========== CROSS-SECTIONAL VS LONGITUDINAL ==========
-        if (q.includes("cross-sectional") || q.includes("longitudinal") || (q.includes("panel") && q.includes("research"))) {
-            return `📅 **Cross-Sectional vs Longitudinal Research**\n\n` +
-                   `**CROSS-SECTIONAL RESEARCH**\n` +
-                   `• Information collected from sample(s) at ONE point in time only\n` +
-                   `• Single cross-sectional: one sample of respondents\n` +
-                   `• Multiple cross-sectional: two or more samples\n` +
-                   `• Cohort analysis: surveys at appropriate time intervals\n` +
-                   `• Snapshot of a moment in time\n` +
-                   `• Less expensive, faster\n\n` +
-                   `**LONGITUDINAL RESEARCH**\n` +
-                   `• Fixed sample measured repeatedly across different points of time\n` +
-                   `• Same sample remains over time\n` +
-                   `• Panel = interchangeable term\n` +
-                   `• Panel = households that agreed to provide information at specified intervals\n` +
-                   `• Series of pictures showing changes over time\n\n` +
-                   `**Advantages of Longitudinal:**\n` +
-                   `✓ Information obtained more than once – more reliable\n` +
-                   `✓ Takes changes related to time into consideration\n` +
-                   `✓ Can identify patterns over time\n\n` +
-                   `**Disadvantages of Longitudinal:**\n` +
-                   `✗ Relatively expensive (several studies conducted)\n` +
-                   `✗ Time-consuming to collect\n` +
-                   `✗ Requires significant respondent cooperation\n` +
-                   `✗ Requires sophisticated design to control potential bias\n\n` +
-                   `💡 *Longitudinal shows changes; cross-sectional shows a snapshot*`;
-        }
-        
-        // ========== GREETINGS ==========
-        if (q.match(/^(hi|hello|hey|gm|good morning|good afternoon|greetings)/i)) {
-            return `🔬 **Hello! Welcome to Topic 4: Research Design Assistant**\n\n` +
-                   `I specialize in helping you master research design concepts:\n\n` +
-                   `🏗️ **Research Design** – Blueprint/framework for research projects\n` +
-                   `📊 **Qualitative vs Quantitative** – Differences, uses, complementarity\n` +
-                   `🔍 **Exploratory Research** – Focus groups, depth interviews, projective techniques\n` +
-                   `📋 **Descriptive Research** – Cross-sectional, longitudinal, 6 Ws\n` +
-                   `⚡ **Causal Research** – Experiments, 3 conditions for causality\n` +
-                   `📁 **Primary vs Secondary Data** – Sources, advantages, disadvantages\n` +
-                   `📞 **Survey Methods** – Personal, telephone, mail, electronic\n` +
-                   `👥 **Unit of Analysis** – Individual, dyad, group, organization\n\n` +
-                   `What would you like to learn about today?`;
-        }
-        
-        // ========== HELP ==========
-        if (q.includes("what can you do") || q.includes("help") || q === "?" || q === "help me") {
-            return `📋 **Topic 4: Research Design – What I Can Help With**\n\n` +
-                   `**Research Design Types:**\n` +
-                   `• Definition and importance of research design\n` +
-                   `• Differences between exploratory, descriptive, causal\n\n` +
-                   `**Qualitative vs Quantitative:**\n` +
-                   `• Key differences, when to use each\n` +
-                   `• Complementary nature of both approaches\n\n` +
-                   `**Exploratory Research:**\n` +
-                   `• Focus groups (advantages, process, variations)\n` +
-                   `• Depth interviews (laddering, hidden issue, symbolic analysis)\n` +
-                   `• Projective techniques (word association, sentence completion, construction, expressive)\n\n` +
-                   `**Descriptive Research:**\n` +
-                   `• Cross-sectional vs longitudinal\n` +
-                   `• Single vs multiple cross-sectional\n` +
-                   `• Cohort analysis, panel studies\n\n` +
-                   `**Causal Research:**\n` +
-                   `• 3 conditions for causality (time sequence, concomitant variation, control)\n` +
-                   `• Experimentation as main method\n\n` +
-                   `**Data Types & Methods:**\n` +
-                   `• Primary vs secondary data, internal/external sources\n` +
-                   `• Survey methods (personal, telephone, mail, fax, electronic)\n` +
-                   `• Unit of analysis (individual, dyad, group, organization)\n\n` +
-                   `**Try asking:** "What is the difference between cross-sectional and longitudinal?" or "Explain the 3 conditions for causality"`;
-        }
-        
-        // ========== DEFAULT ==========
-        return `📘 **Topic 4: Research Design – Marketing Research Blueprint**\n\n` +
-               `I can help you understand:\n\n` +
-               `🏗️ **Research Design** – Framework/plan for research project (road-map to avoid getting lost)\n` +
-               `📊 **Qualitative vs Quantitative** – Unstructured/small sample vs structured/statistical analysis\n` +
-               `🔍 **Exploratory Research** – Focus groups, depth interviews, projective techniques\n` +
-               `📋 **Descriptive Research** – Cross-sectional (one time) vs Longitudinal (over time), 6 Ws\n` +
-               `⚡ **Causal Research** – Experiments, 3 conditions: time sequence, concomitant variation, control\n` +
-               `📁 **Primary vs Secondary Data** – Primary = new/original; Secondary = existing/quick\n` +
-               `📞 **Survey Methods** – Personal, telephone, mail, fax, electronic interview\n` +
-               `👥 **Unit of Analysis** – Individual, dyad, group, organization\n\n` +
-               `**Try asking:**\n` +
-               `• "What is the difference between exploratory, descriptive, and causal research?"\n` +
-               `• "Explain focus groups and their advantages"\n` +
-               `• "What are the
+    sendButton.addEventListener('click', handleSend);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+    });
+    
+    const topicChips = document.querySelectorAll('.topic-chip');
+    topicChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const preQuestion = chip.getAttribute('data-question');
+            if (preQuestion) {
+                appendMessage(preQuestion, 'user');
+                const botAns = getBotAnswer(preQuestion);
+                appendMessage(botAns, 'bot');
+            }
+        });
+    });
+    
+    window.addEventListener('load', () => {
+        scrollToBottom();
+    });
+</script>
+</body>
+</html>
