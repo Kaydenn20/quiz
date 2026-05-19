@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Match Quiz | Final Score Celebration 🎉</title>
+    <title>Topic 1: Intro to Marketing Research | Matching Quiz</title>
     <style>
         * {
             margin: 0;
@@ -58,8 +58,15 @@
         }
 
         .title-area h2:before {
-            content: "🧠";
+            content: "📊";
             font-size: 1.7rem;
+        }
+
+        .topic-sub {
+            font-size: 0.75rem;
+            color: #5e7a93;
+            margin-top: 0.2rem;
+            font-weight: normal;
         }
 
         .final-score-badge {
@@ -243,6 +250,10 @@
             transform: translateY(1px);
         }
 
+        .next-btn.hidden-btn {
+            display: none;
+        }
+
         .message-area {
             font-size: 0.85rem;
             color: #557c8f;
@@ -326,7 +337,7 @@
 <div class="quiz-box">
     <div class="quiz-header">
         <div class="title-area">
-            <h2>Match & Learn</h2>
+            <h2>Topic 1: Introduction to Marketing Research</h2>
             <div class="step-badge" id="stepIndicator">📘 Step 1 · Question 9</div>
         </div>
         <!-- Final score badge (hidden initially, appears after completion) -->
@@ -580,9 +591,16 @@
             // add perfect styling if applicable
             if (score === total) {
                 finalScoreBadge.classList.add("perfect-score-top");
-                // Optionally add confetti if not triggered yet (triggered in final evaluation)
             } else {
                 finalScoreBadge.classList.remove("perfect-score-top");
+            }
+        }
+        
+        // Hide next button after final score (remove it entirely)
+        function removeNextButton() {
+            if (nextButton) {
+                nextButton.classList.add("hidden-btn");
+                nextButton.style.display = "none";
             }
         }
 
@@ -610,10 +628,11 @@
             } 
             else if (currentStep === 2) {
                 stepIndicator.innerText = "✅ Assessment completed";
-                hintMsg.innerHTML = "🎉 Great! Your final score is shown at the top.";
-                nextButton.disabled = true;
-                nextButton.style.opacity = "0.55";
-                nextButton.style.cursor = "default";
+                hintMsg.innerHTML = "🎉 Quiz finished! Your final score is shown at the top.";
+                
+                // ✅ DELETE NEXT BUTTON (remove from DOM)
+                removeNextButton();
+                
                 // show final score badge at top
                 showFinalScoreInHeader();
                 evaluateFinalScoreAndCelebrate();
@@ -662,8 +681,6 @@
             resultArea.style.display = "block";
             resultArea.className = "result-panel";
             
-            // Build the detailed result with the exact formatting requested: 
-            // "🏅 Score: 2 / 2 · 100%  🌟 Congratulations! You nailed both questions! 🎊"
             let perfectMessage = "";
             if (isPerfect) {
                 perfectMessage = `<div style="margin-top: 12px; background:#ffe5b4; padding:8px 16px; border-radius: 40px; display:inline-block; font-weight:600;">🌟 Congratulations! You nailed both questions! 🎊</div>`;
@@ -679,8 +696,7 @@
                 ${perfectMessage}
             `;
             
-            // Also update the top badge with the same score (already done in showFinalScoreInHeader)
-            // but ensure perfect styling sync
+            // update top badge again (ensure perfect styling)
             if (isPerfect) {
                 finalScoreBadge.classList.add("perfect-score-top");
             } else {
@@ -782,7 +798,7 @@
                     return;
                 }
                 currentStep = 2;
-                updateUIByStep();  // this shows final score badge and detailed result
+                updateUIByStep();  // this hides next button, shows final score badge and detailed result
                 redrawLines();
             }
         }
@@ -817,6 +833,9 @@
             q10Answers.forEach(a => a.classList.add("hidden"));
             stepIndicator.innerText = "📘 Step 1 · Question 9";
             hintMsg.innerHTML = "✨ Click a blue question, then tap an answer";
+            // Make sure next button is visible and enabled
+            nextButton.classList.remove("hidden-btn");
+            nextButton.style.display = "flex";
             nextButton.disabled = false;
             nextButton.style.opacity = "1";
             nextButton.style.cursor = "pointer";
