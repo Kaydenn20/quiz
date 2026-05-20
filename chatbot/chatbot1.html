@@ -1,450 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Marketing Research & Analytics AI | Topic 1 Chatbot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marketing Research & Analytics AI | Topic 1 Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(145deg, #eef2f5 0%, #dce5ec 100%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-}
+    .chat-app {
+      width: 100%;
+      max-width: 1280px;
+      height: 92vh;
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+      display: flex;
+      overflow: hidden;
+    }
 
-.chat-app {
-    width: 100%;
-    max-width: 1280px;
-    height: 92vh;
-    background: #ffffff;
-    border-radius: 32px;
-    box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
-    display: flex;
-    overflow: hidden;
-}
+    /* ── Side Panel ── */
+    .side-panel {
+      width: 290px;
+      background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
+      padding: 28px 20px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .side-panel::-webkit-scrollbar { width: 5px; }
+    .side-panel::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    .side-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 10px; }
 
-.side-panel {
-    width: 290px;
-    background: linear-gradient(180deg, #1a3c2c 0%, #0f2a1e 100%);
-    padding: 28px 20px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
+    .brand { margin-bottom: 28px; flex-shrink: 0; }
+    .brand h2 {
+      font-size: 1.7rem; font-weight: 700; letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
+      background-clip: text; -webkit-background-clip: text; color: transparent;
+    }
+    .brand p { font-size: 12px; opacity: 0.85; margin-top: 6px; }
 
-.side-panel::-webkit-scrollbar {
-    width: 5px;
-}
-.side-panel::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
-.side-panel::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.4);
-    border-radius: 10px;
-}
+    .topic-section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .topic-section h4 {
+      font-weight: 600; font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 1px; margin: 0 0 12px 0; opacity: 0.7; flex-shrink: 0;
+    }
+    .topic-list {
+      display: flex; flex-direction: column; gap: 8px;
+      overflow-y: auto; flex: 1; padding-right: 5px;
+    }
+    .topic-list::-webkit-scrollbar { width: 4px; }
+    .topic-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    .topic-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 10px; }
 
-.brand {
-    margin-bottom: 28px;
-    flex-shrink: 0;
-}
+    .topic-chip {
+      background: rgba(255,255,255,0.12); padding: 10px 14px;
+      border-radius: 18px; font-size: 0.8rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+    }
+    .topic-chip:hover { background: #ffffff; color: #1a3c2c; transform: translateX(4px); }
 
-.brand h2 {
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    background: linear-gradient(135deg, #FFFFFF, #c7f0b2);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-}
+    /* ── Chat Main ── */
+    .chat-main {
+      flex: 1; display: flex; flex-direction: column;
+      background: #fefefe; overflow: hidden;
+    }
 
-.brand p {
-    font-size: 12px;
-    opacity: 0.85;
-    margin-top: 6px;
-}
+    .chat-header {
+      padding: 18px 28px; border-bottom: 1px solid #e9edf2;
+      background: white; flex-shrink: 0; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .chat-header-left h3 { font-size: 1.25rem; font-weight: 600; color: #1f2e3a; }
+    .chat-header-left span { font-size: 0.75rem; color: #5c6f87; }
 
-.topic-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-}
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.72rem; font-weight: 600; padding: 5px 12px;
+      border-radius: 20px; transition: all 0.3s;
+    }
+    .status-pill.connecting { background: #fef9c3; color: #854d0e; }
+    .status-pill.ready     { background: #dcfce7; color: #14532d; }
+    .status-pill.error     { background: #fee2e2; color: #991b1b; }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: currentColor;
+    }
+    .status-pill.ready .status-dot {
+      animation: pulse-dot 1.8s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
 
-.topic-section h4 {
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 0 12px 0;
-    opacity: 0.7;
-    flex-shrink: 0;
-}
+    .messages-area {
+      flex: 1; overflow-y: auto; padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 18px; background: #fafcff;
+    }
+    .messages-area::-webkit-scrollbar { width: 6px; }
+    .messages-area::-webkit-scrollbar-track { background: #eef2f8; border-radius: 8px; }
+    .messages-area::-webkit-scrollbar-thumb { background: #b9c8b2; border-radius: 8px; }
 
-.topic-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
-    flex: 1;
-    padding-right: 5px;
-}
+    .message-bubble {
+      max-width: 80%; padding: 12px 18px; border-radius: 24px;
+      line-height: 1.6; font-size: 0.95rem; word-break: break-word;
+    }
+    .bot-msg {
+      background: #f0f4f9; border: 1px solid #e2e8f0;
+      align-self: flex-start; border-bottom-left-radius: 5px; color: #1e2a3a;
+    }
+    .user-msg {
+      background: #1a5d3c; color: white;
+      align-self: flex-end; border-bottom-right-radius: 5px;
+    }
 
-.topic-list::-webkit-scrollbar {
-    width: 4px;
-}
-.topic-list::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
-.topic-list::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.4);
-    border-radius: 10px;
-}
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex; align-items: center; gap: 5px; padding: 14px 18px;
+      background: #f0f4f9; border: 1px solid #e2e8f0; border-radius: 24px;
+      border-bottom-left-radius: 5px; align-self: flex-start; width: fit-content;
+    }
+    .typing-indicator span {
+      width: 8px; height: 8px; background: #94a3b8; border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
 
-.topic-chip {
-    background: rgba(255,255,255,0.12);
-    padding: 10px 14px;
-    border-radius: 18px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
+    /* ── Input Row ── */
+    .input-row {
+      padding: 16px 24px 24px; border-top: 1px solid #eef2f8;
+      background: white; display: flex; gap: 12px; align-items: center; flex-shrink: 0;
+    }
+    .input-row input {
+      flex: 1; padding: 14px 18px; border-radius: 60px;
+      border: 1px solid #cbd5e1; font-family: inherit; font-size: 0.9rem; outline: none;
+    }
+    .input-row input:focus {
+      border-color: #1a5d3c; box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
+    }
+    .input-row input:disabled { background: #f8fafc; cursor: not-allowed; }
+    .input-row button {
+      background: #1a5d3c; border: none; padding: 12px 26px;
+      border-radius: 60px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .input-row button:hover:not(:disabled) { background: #0e3f28; }
+    .input-row button:disabled { background: #94a3b8; cursor: not-allowed; }
 
-.topic-chip:hover {
-    background: #ffffff;
-    color: #1a3c2c;
-    transform: translateX(4px);
-}
+    /* ── Hide Botpress default widget UI completely ── */
+    #bp-web-widget,
+    #bp-web-widget-container,
+    .bpw-floating-button,
+    .bpw-layout,
+    [class*="bpw-"],
+    [id*="bp-web"] {
+      display: none !important;
+      pointer-events: none !important;
+    }
 
-.chat-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #fefefe;
-    overflow: hidden;
-}
-
-.chat-header {
-    padding: 18px 28px;
-    border-bottom: 1px solid #e9edf2;
-    background: white;
-    flex-shrink: 0;
-}
-
-.chat-header h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1f2e3a;
-}
-
-.chat-header span {
-    font-size: 0.75rem;
-    color: #5c6f87;
-}
-
-.messages-area {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    background: #fafcff;
-}
-
-.messages-area::-webkit-scrollbar {
-    width: 6px;
-}
-.messages-area::-webkit-scrollbar-track {
-    background: #eef2f8;
-    border-radius: 8px;
-}
-.messages-area::-webkit-scrollbar-thumb {
-    background: #b9c8b2;
-    border-radius: 8px;
-}
-
-.message-bubble {
-    max-width: 80%;
-    padding: 12px 18px;
-    border-radius: 24px;
-    line-height: 1.5;
-    font-size: 0.95rem;
-    word-break: break-word;
-}
-
-.bot-msg {
-    background: #f0f4f9;
-    border: 1px solid #e2e8f0;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-    color: #1e2a3a;
-}
-
-.user-msg {
-    background: #1a5d3c;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-}
-
-.input-row {
-    padding: 16px 24px 24px 24px;
-    border-top: 1px solid #eef2f8;
-    background: white;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.input-row input {
-    flex: 1;
-    padding: 14px 18px;
-    border-radius: 60px;
-    border: 1px solid #cbd5e1;
-    font-family: inherit;
-    font-size: 0.9rem;
-    outline: none;
-}
-
-.input-row input:focus {
-    border-color: #1a5d3c;
-    box-shadow: 0 0 0 3px rgba(26,93,60,0.2);
-}
-
-.input-row button {
-    background: #1a5d3c;
-    border: none;
-    padding: 12px 26px;
-    border-radius: 60px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.input-row button:hover {
-    background: #0e3f28;
-}
-
-@media (max-width: 700px) {
-    .side-panel { display: none; }
-    .message-bubble { max-width: 90%; }
-}
-</style>
+    @media (max-width: 700px) {
+      .side-panel { display: none; }
+      .message-bubble { max-width: 90%; }
+    }
+  </style>
 </head>
 <body>
 
 <div class="chat-app">
-    <div class="side-panel">
-        <div class="brand">
-            <h2>📊 Marketing Research<br>& Analytics AI</h2>
-            <p>Topic 1: Intro to Marketing Research</p>
-        </div>
-        <div class="topic-section">
-            <h4>📚 TOPIC 1: LEARNING TOPICS</h4>
-            <div class="topic-list">
-                <div class="topic-chip" data-question="What is marketing research?">📖 Definition of Marketing Research</div>
-                <div class="topic-chip" data-question="What is the importance of marketing research?">⭐ Importance of Marketing Research</div>
-                <div class="topic-chip" data-question="What is the role of marketing research?">🎯 Role of Marketing Research</div>
-                <div class="topic-chip" data-question="What are the 6 steps in the marketing research process?">⚙️ Marketing Research Process (6 Steps)</div>
-                <div class="topic-chip" data-question="What is the marketing environment?">🌍 Marketing Environment</div>
-                <div class="topic-chip" data-question="What is problem identification research?">🔎 Problem Identification Research</div>
-                <div class="topic-chip" data-question="What is problem solving research?">🛠️ Problem Solving Research</div>
-                <div class="topic-chip" data-question="What is the difference between internal and external researchers?">👥 Internal vs External Researchers</div>
-                <div class="topic-chip" data-question="What are the qualities of a good marketing researcher?">✨ Qualities of a Marketing Researcher</div>
-                <div class="topic-chip" data-question="What is the scientific approach in marketing research?">🔬 Scientific Approach</div>
-                <div class="topic-chip" data-question="What are the marketing variables (micro-environment)?">📦 Marketing Mix (Controllable Variables)</div>
-                <div class="topic-chip" data-question="Who are the customers and stakeholders?">👥 Customers & Stakeholders</div>
-                <div class="topic-chip" data-question="What is research design?">📐 Research Design</div>
-                <div class="topic-chip" data-question="What is data collection in marketing research?">📊 Data Collection Methods</div>
-                <div class="topic-chip" data-question="What are the learning outcomes for Topic 1?">📚 Learning Outcomes</div>
-            </div>
-        </div>
+
+  <!-- ── Sidebar ── -->
+  <div class="side-panel">
+    <div class="brand">
+      <h2>📊 Marketing Research<br>& Analytics AI</h2>
+      <p>Topic 1: Intro to Marketing Research</p>
+    </div>
+    <div class="topic-section">
+      <h4>📚 TOPIC 1: LEARNING TOPICS</h4>
+      <div class="topic-list">
+        <div class="topic-chip" data-question="What is marketing research?">📖 Definition of Marketing Research</div>
+        <div class="topic-chip" data-question="What is the importance of marketing research?">⭐ Importance of Marketing Research</div>
+        <div class="topic-chip" data-question="What is the role of marketing research?">🎯 Role of Marketing Research</div>
+        <div class="topic-chip" data-question="What are the 6 steps in the marketing research process?">⚙️ Marketing Research Process (6 Steps)</div>
+        <div class="topic-chip" data-question="What is the marketing environment?">🌍 Marketing Environment</div>
+        <div class="topic-chip" data-question="What is problem identification research?">🔎 Problem Identification Research</div>
+        <div class="topic-chip" data-question="What is problem solving research?">🛠️ Problem Solving Research</div>
+        <div class="topic-chip" data-question="What is the difference between internal and external researchers?">👥 Internal vs External Researchers</div>
+        <div class="topic-chip" data-question="What are the qualities of a good marketing researcher?">✨ Qualities of a Marketing Researcher</div>
+        <div class="topic-chip" data-question="What is the scientific approach in marketing research?">🔬 Scientific Approach</div>
+        <div class="topic-chip" data-question="What are the marketing variables (micro-environment)?">📦 Marketing Mix (Controllable Variables)</div>
+        <div class="topic-chip" data-question="Who are the customers and stakeholders?">👥 Customers & Stakeholders</div>
+        <div class="topic-chip" data-question="What is research design?">📐 Research Design</div>
+        <div class="topic-chip" data-question="What is data collection in marketing research?">📊 Data Collection Methods</div>
+        <div class="topic-chip" data-question="What are the learning outcomes for Topic 1?">📚 Learning Outcomes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chat Main ── -->
+  <div class="chat-main">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <h3>🧠 Marketing Research & Analytics Tutor</h3>
+        <span>Powered by Botpress AI | Ask anything about Topic 1!</span>
+      </div>
+      <div id="statusPill" class="status-pill connecting">
+        <span class="status-dot"></span>
+        <span id="statusLabel">Connecting…</span>
+      </div>
     </div>
 
-    <div class="chat-main">
-        <div class="chat-header">
-            <h3>🧠 Marketing Research & Analytics Tutor</h3>
-            <span>Based on your complete lecture notes | Ask anything about Topic 1!</span>
-        </div>
-        <div class="messages-area" id="chatMessages">
-            <div class="message-bubble bot-msg">
-                👋 <strong>Hello!</strong> I'm your Marketing Research AI for <strong>Topic 1: Introduction to Marketing Research</strong>. Ask me about definition, importance, role, process, environment, problem identification/solving research, researcher qualities, and more — all based on your provided lecture notes!
-            </div>
-        </div>
-        <div class="input-row">
-            <input type="text" id="userQuery" placeholder="e.g., What is problem identification research? or List the steps..." autocomplete="off">
-            <button id="sendBtn">Send →</button>
-        </div>
+    <div class="messages-area" id="chatMessages">
+      <div class="message-bubble bot-msg">
+        👋 <strong>Hello!</strong> I'm your Marketing Research AI for <strong>Topic 1: Introduction to Marketing Research</strong>. Ask me about definition, importance, role, process, environment, problem identification/solving research, researcher qualities, and more!
+      </div>
     </div>
+
+    <div class="input-row">
+      <input type="text" id="userQuery" placeholder="Connecting to AI…" autocomplete="off" disabled>
+      <button id="sendBtn" disabled>Send →</button>
+    </div>
+  </div>
 </div>
 
+<!-- ① Load Botpress inject SDK -->
+<script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+
 <script>
-    const messagesContainer = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userQuery');
-    const sendButton = document.getElementById('sendBtn');
+(function () {
+  'use strict';
 
-    function scrollToBottom() {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+  /* ─── DOM refs ─── */
+  const messagesEl  = document.getElementById('chatMessages');
+  const inputEl     = document.getElementById('userQuery');
+  const sendBtn     = document.getElementById('sendBtn');
+  const statusPill  = document.getElementById('statusPill');
+  const statusLabel = document.getElementById('statusLabel');
 
-    function appendMessage(text, sender) {
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('message-bubble');
-        msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'bot-msg');
-        msgDiv.innerHTML = text;
-        messagesContainer.appendChild(msgDiv);
-        scrollToBottom();
-    }
+  let isReady    = false;
+  let isWaiting  = false; // waiting for bot reply
 
-    function getBotAnswer(questionText) {
-        const q = questionText.toLowerCase();
-        
-        // Definition
-        if (q.includes('definition') || q.includes('what is marketing research') || (q.includes('marketing research') && (q.includes('mean') || q.includes('define')))) {
-            return `<b>📌 Marketing Research Definition</b><br><br>Marketing research is a <b>systematic and objective process</b> of:<br>• Identifying and defining marketing problem(s)<br>• Developing the research approach<br>• Designing the research<br>• Collecting and analyzing data<br>• Disseminating marketing information<br><br><i>Purpose: making good marketing decisions towards marketing excellence. It is a scientific process requiring careful planning at different stages.</i>`;
-        }
-        
-        // Importance
-        if (q.includes('importance') || q.includes('why is') || q.includes('benefits') || q.includes('advantage') || (q.includes('important') && q.includes('market'))) {
-            return `<b>⭐ Importance of Marketing Research</b><br><br>✅ Improves marketing strategies & reduces wastage of resources<br>✅ Identifies market opportunities & customer needs<br>✅ Helps managers respond to competition & environmental changes<br>✅ Enhances organizational performance<br>✅ Helps transform market management thinking to reflect target customers' view<br>✅ Avoids poor decisions, improves product, price, promotion, distribution`;
-        }
-        
-        // Role
-        if (q.includes('role') || q.includes('function') || q.includes('what does marketing research do') || q.includes('purpose')) {
-            return `<b>🎯 Role of Marketing Research</b><br><br>• Supports marketing decision-making (strategic & tactical)<br>• Identifies customer needs, competitors, and environment<br>• Helps develop marketing mix strategies<br>• Provides insights about micro & macro environment<br>• Enables managers to evaluate performance, segmentation & targeting<br>• Helps predict future consumers and their buying habits`;
-        }
-        
-        // Process / Steps
-        if (q.includes('process') || q.includes('steps') || q.includes('stage') || q.includes('how to conduct') || q.includes('methodology')) {
-            return `<b>⚙️ Marketing Research Process (6 Steps)</b><br><br>
-            <b>Step 1: Identify & Define Problem</b> – most important step; discussion with decision makers, experts, secondary data analysis<br>
-            <b>Step 2: Develop Approach</b> – formulate objectives, research questions, theoretical framework, hypotheses<br>
-            <b>Step 3: Design Research</b> – blueprint including info needed, type of investigation, sampling plan, instrumentation<br>
-            <b>Step 4: Collect Data</b> – field force, personal interviewing, telephone, mail, electronic methods<br>
-            <b>Step 5: Prepare & Analyze Data</b> – editing, coding, transcription, data cleaning, statistical analysis<br>
-            <b>Step 6: Report & Present</b> – written report with findings, oral presentation to management<br><br>
-            <i>Scientific research must be purposive, rigorous, testable, replicable, precise, objective, representative, and parsimonious.</i>`;
-        }
-        
-        // Environment
-        if (q.includes('environment') || q.includes('external factors') || q.includes('uncontrollable') || q.includes('macro')) {
-            return `<b>🌍 Marketing Environment (External Uncontrollable Factors)</b><br><br>Organizations cannot control these but must be aware of changes:<br><br>• Economy<br>• Technology<br>• Competition<br>• Legal & Political<br>• Social & Cultural<br>• Physical & Natural<br><br>Marketing research helps managers respond strategically to these environmental forces.`;
-        }
-        
-        // Problem Identification
-        if (q.includes('problem identification') || q.includes('basic research') || q.includes('pure research')) {
-            return `<b>🔎 Problem Identification Research (Basic/Pure Research)</b><br><br>Aims to identify and understand marketing problems/situations.<br><br><b>Examples from lecture notes:</b><br>• Market potential research<br>• Feasibility study<br>• Market share research<br>• Image research<br>• Market characteristic research<br>• Sales analysis research<br>• Service climate/culture study<br>• Forecasting research<br>• Business trends and target market analysis<br>• Cross-cultural customer analysis`;
-        }
-        
-        // Problem Solving
-        if (q.includes('problem solving') || q.includes('applied research')) {
-            return `<b>🛠️ Problem Solving Research (Applied Research)</b><br><br>Helps solve specific marketing problems faced by organizations.<br><br><b>Examples from lecture notes:</b><br>• Market Segmentation research<br>• Market targeting study<br>• Market positioning study<br>• Product research<br>• Pricing research<br>• Promotion research<br>• Distribution research<br>• Service quality research<br>• Internal marketing research<br>• Marketing performance and management research`;
-        }
-        
-        // Internal vs External Researchers
-        if ((q.includes('internal') && q.includes('external')) || q.includes('researcher types') || q.includes('hire researchers')) {
-            return `<b>👥 Internal vs External Marketing Researchers</b><br><br><b>Internal Researchers:</b> employees within organization, familiar with culture but may lack objectivity or specialized techniques.<br><br><b>External Researchers:</b> hired from outside agencies, bring fresh perspective, expertise in advanced statistical methods, and no internal politics. Especially useful for complex industrial products or urgent decisions.<br><br>External researchers can provide unbiased answers without fear of reprisal. Both must be competent, professional, ethical.`;
-        }
-        
-        // Qualities of Researcher
-        if (q.includes('qualities') || q.includes('characteristics') || q.includes('good researcher') || q.includes('effective researcher')) {
-            return `<b>✨ Desirable Qualities of a Marketing Researcher</b><br><br>From the lecture notes:<br><br>• <b>Knowledgeable</b> in marketing (problem definition, analysis, recommendations)<br>• <b>Professional</b> for overall project management<br>• <b>Competent</b> in research methodology<br>• <b>Sociable</b> (project solicitation, data collection, presentation)<br>• <b>Persistent</b> – continuously working and performance-oriented<br>• <b>Fluent</b> in required language<br>• <b>Energetic</b> especially for data collection<br>• <b>Analytical</b> for data analysis and discussions<br>• <b>Critical</b> for literature review and data analysis<br>• <b>Ethical</b> for overall project<br>• <b>Experienced</b> for overall project<br><br><i>Marketing research excellence demands high integrity and expertise.</i>`;
-        }
-        
-        // Scientific Approach
-        if (q.includes('scientific') || q.includes('rigorous') || q.includes('replicable') || q.includes('empirical')) {
-            return `<b>🔬 Scientific Investigation in Marketing Research</b><br><br>All propositions must be subjected to empirical tests. The scientific method ensures objectivity, replication, and observation by others.<br><br><b>Characteristics of scientific marketing research:</b><br>• Purposive<br>• Rigorous<br>• Testable<br>• Replicable<br>• Precise<br>• Objective<br>• Representative<br>• Parsimonious<br><br><i>Scientific investigation helps eliminate commercialization of products that are not customer-oriented.</i>`;
-        }
-        
-        // Marketing Mix / Controllable Variables
-        if ((q.includes('marketing mix') || q.includes('controllable') || q.includes('4ps') || q.includes('product price promotion')) && !q.includes('environment')) {
-            return `<b>📦 Marketing Variables (Micro-environment / Controllable)</b><br><br>Organizations can manage these effectively:<br><br>• <b>Product</b><br>• <b>Pricing</b><br>• <b>Promotion</b><br>• <b>Distribution</b><br>• <b>Service</b><br>• <b>People</b><br>• <b>Process</b><br><br>Marketing research provides the necessary intelligence to optimize these variables for target customers.`;
-        }
-        
-        // Customers & Stakeholders
-        if ((q.includes('customer') || q.includes('stakeholder') || q.includes('consumer')) && !q.includes('environment')) {
-            return `<b>👥 Customers & Stakeholders</b><br><br>Includes:<br>• Consumers<br>• Employees<br>• Shareholders<br>• Suppliers<br>• Government and non-government organizations<br><br>Market-oriented organizations put customers' interests first for profitability and organizational excellence. Marketing research helps understand their needs, wants, and desires.`;
-        }
-        
-        // Research Design
-        if (q.includes('research design') || q.includes('blueprint') || q.includes('framework for research')) {
-            return `<b>📐 Research Design</b><br><br>A research design is a framework or blueprint for conducting the entire marketing research project. Tasks involved:<br><br>• Identification of information needed<br>• Types of investigation (exploratory, descriptive, causal)<br>• Primary and/or secondary data analysis<br>• Qualitative or quantitative research<br>• Unit of analysis<br>• Data collection methods<br>• Measurement and scaling procedures<br>• Instrumentation and questionnaire design<br>• Sampling technique and sample size<br>• Data analysis strategy`;
-        }
-        
-        // Data Collection
-        if (q.includes('data collection') || q.includes('collecting data') || q.includes('field force')) {
-            return `<b>📊 Data Collection in Marketing Research</b><br><br>Data collection involves a field force operating in various modes:<br><br>• Personal interviewing (at home, mall intercept, computer-assisted)<br>• Telephone interviewing (traditional or computer-assisted)<br>• Mail surveys (traditional mail and mail panel)<br>• Electronic methods (email or internet)<br><br>Proper selection, training, supervision and evaluation of fieldworkers helps minimize data collection errors.`;
-        }
-        
-        // Learning Outcomes
-        if (q.includes('learning outcome') || q.includes('what will i learn') || q.includes('objectives')) {
-            return `<b>📚 Learning Outcomes (Topic 1)</b><br><br>By the end of this module, learners will be able to:<br><br>✅ <b>Define and understand</b> the role of marketing research<br>✅ <b>Appreciate the importance</b> of marketing research<br>✅ <b>Know the critical steps</b> in the marketing research process<br><br>All these outcomes are covered in detail through this AI tutor.`;
-        }
-        
-        // Default fallback
-        return `<b>📘 Topic 1: Introduction to Marketing Research</b><br><br>Based on your lecture notes, I can help you with:<br><br>• <b>Definition</b> of marketing research<br>• <b>Importance & Role</b><br>• <b>6-Step Process</b><br>• <b>Marketing Environment</b><br>• <b>Problem Identification vs Problem Solving Research</b><br>• <b>Internal vs External Researchers</b><br>• <b>Qualities of Marketing Researchers</b><br>• <b>Scientific Approach</b><br>• <b>Marketing Mix (Controllable Variables)</b><br>• <b>Customers & Stakeholders</b><br>• <b>Research Design & Data Collection</b><br><br>Please type your question or click any topic on the left sidebar!`;
-    }
+  /* ─── Helpers ─── */
+  function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
 
-    function escapeHtmlSimple(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+  function addMessage(content, role) {
+    const div = document.createElement('div');
+    div.className = 'message-bubble ' + (role === 'user' ? 'user-msg' : 'bot-msg');
+    if (role === 'bot') div.innerHTML = content;
+    else div.textContent = content;
+    messagesEl.appendChild(div);
+    scrollBottom();
+  }
 
-    function handleSend() {
-        let query = userInput.value.trim();
-        if (query === "") return;
-        
-        appendMessage(escapeHtmlSimple(query), 'user');
-        userInput.value = '';
-        
-        const answerHtml = getBotAnswer(query);
-        appendMessage(answerHtml, 'bot');
+  function showTyping() {
+    if (document.getElementById('typingDots')) return;
+    const el = document.createElement('div');
+    el.className = 'typing-indicator';
+    el.id = 'typingDots';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(el);
+    scrollBottom();
+  }
+
+  function hideTyping() {
+    const el = document.getElementById('typingDots');
+    if (el) el.remove();
+  }
+
+  function setUI(ready) {
+    isReady = ready;
+    inputEl.disabled = !ready || isWaiting;
+    sendBtn.disabled = !ready || isWaiting;
+    inputEl.placeholder = ready
+      ? 'e.g., What is problem identification research?'
+      : 'Connecting to AI…';
+  }
+
+  function setStatus(state, label) {
+    statusPill.className = 'status-pill ' + state;
+    statusLabel.textContent = label;
+  }
+
+  /* ─── Init Botpress ─── */
+  function waitForBotpress() {
+    if (typeof window.botpress === 'undefined') {
+      setTimeout(waitForBotpress, 200);
+      return;
     }
-    
-    sendButton.addEventListener('click', handleSend);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
+    startBotpress();
+  }
+
+  function startBotpress() {
+    /* Listen for incoming bot messages BEFORE init so we don't miss them */
+    window.botpress.on('message', function (msg) {
+      /*
+        Botpress v3 'message' event payload structure:
+        msg.payload.text  — for text messages
+        msg.payload.type  — 'text' | 'image' | 'carousel' etc.
+        msg.direction     — 'incoming' (from bot) | 'outgoing' (from user)
+      */
+      if (msg.direction === 'outgoing') return; // ignore echo of user messages
+
+      const text = msg?.payload?.text || msg?.text;
+      if (!text) return;
+
+      hideTyping();
+      isWaiting = false;
+      setUI(true);
+      addMessage(text, 'bot');
     });
-    
-    const topicChips = document.querySelectorAll('.topic-chip');
-    topicChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            const preQuestion = chip.getAttribute('data-question');
-            if (preQuestion) {
-                appendMessage(preQuestion, 'user');
-                const botAns = getBotAnswer(preQuestion);
-                appendMessage(botAns, 'bot');
-            }
-        });
+
+    window.botpress.on('webchat:ready', function () {
+      setStatus('ready', '● AI Ready');
+      setUI(true);
     });
-    
-    window.addEventListener('load', () => {
-        scrollToBottom();
+
+    window.botpress.on('error', function (err) {
+      console.warn('[Botpress error]', err);
+      setStatus('error', 'Connection error');
+      hideTyping();
+      isWaiting = false;
+      setUI(true);
     });
+
+    /* Init — configuration mirrors what the .js config file sets,
+       we only override cosmetic things here */
+    window.botpress.init({
+      clientId: 'a2162a4c-c626-4885-9ea2-1605ae7be86c',
+      configuration: {
+        botName: 'Marketing Research AI',
+        composerPlaceholder: 'Ask me anything about Topic 1…',
+        /* Keep the widget rendered but invisible via CSS */
+        color: '#1a5d3c',
+      },
+    });
+
+    /* Safety fallback: mark ready after 6s regardless */
+    setTimeout(function () {
+      if (!isReady) {
+        setStatus('ready', '● AI Ready');
+        setUI(true);
+      }
+    }, 6000);
+  }
+
+  /* ─── Send flow ─── */
+  async function handleSend(overrideText) {
+    const text = overrideText || inputEl.value.trim();
+    if (!text || !isReady || isWaiting) return;
+
+    inputEl.value = '';
+    addMessage(text, 'user');
+
+    isWaiting = true;
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    showTyping();
+
+    try {
+      await window.botpress.sendMessage({ type: 'text', text: text });
+    } catch (err) {
+      console.error('[sendMessage error]', err);
+      hideTyping();
+      isWaiting = false;
+      setUI(true);
+      addMessage('⚠️ Message failed to send. Please try again.', 'bot');
+    }
+  }
+
+  /* ─── Event listeners ─── */
+  sendBtn.addEventListener('click', () => handleSend());
+  inputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+
+  document.querySelectorAll('.topic-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const q = chip.getAttribute('data-question');
+      if (q) handleSend(q);
+    });
+  });
+
+  /* ─── Hide Botpress default widget via MutationObserver ─── */
+  const hideBPWidget = new MutationObserver(() => {
+    const sel = '#bp-web-widget, #bp-web-widget-container, .bpw-floating-button';
+    document.querySelectorAll(sel).forEach((el) => {
+      el.style.setProperty('display', 'none', 'important');
+    });
+  });
+  hideBPWidget.observe(document.body, { childList: true, subtree: true });
+
+  /* ─── Start ─── */
+  scrollBottom();
+  waitForBotpress();
+})();
 </script>
+
+<!-- ② Load your bot's generated config script (deferred — runs after SDK) -->
+<script src="https://files.bpcontent.cloud/2026/05/20/00/20260520003255-FYFA8KXL.js" defer></script>
+
 </body>
 </html>
