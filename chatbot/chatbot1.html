@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Marketing Research & Analytics AI | Topic 1 Chatbot</title>
   
-  <!-- Fix 1: Explicit Google Font Preconnect Tags to resolve CSS loading errors -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Load Botpress Webchat Client -->
+  <!-- Load the Botpress Webchat Injection Engine -->
   <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
   
   <style>
@@ -27,6 +26,8 @@
       background: #fff; border-radius: 32px;
       box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
       display: flex; overflow: hidden;
+      position: relative;
+      z-index: 10;
     }
 
     /* ── Sidebar ── */
@@ -140,11 +141,14 @@
     .input-row button:hover:not(:disabled) { background: #0e3f28; }
     .input-row button:disabled { background: #94a3b8; cursor: not-allowed; }
 
-    /* Fix 2: Safety suppression of default webchat layers */
-    #bp-webchat, .bpw-layout, #botpress-webchat-container, iframe[aria-label="messaging window"] {
+    /* CRITICAL FOR CUSTOM DESIGN: Absolute structural override to turn off the native floating system layers */
+    #bp-webchat, .bpw-layout, #botpress-webchat-container, iframe[aria-label="messaging window"], .bpw-floating-button {
       display: none !important;
       opacity: 0 !important;
       visibility: hidden !important;
+      pointer-events: none !important;
+      height: 0px !important;
+      width: 0px !important;
     }
 
     @media (max-width: 700px) {
@@ -184,12 +188,12 @@
     </div>
   </div>
 
-  <!-- Chat -->
+  <!-- Chat Area -->
   <div class="chat-main">
     <div class="chat-header">
       <div class="chat-header-left">
         <h3>🧠 Marketing Research & Analytics Tutor</h3>
-        <span>Custom Front-end Framework | GitHub Production Build</span>
+        <span>Custom Application Layout UI</span>
       </div>
       <div id="statusPill" class="status-pill connecting">
         <span class="status-dot"></span>
@@ -202,7 +206,6 @@
       </div>
     </div>
     <div class="input-row">
-      <!-- Fix 3: Added name attribute here to resolve HTML form/field validation error -->
       <input type="text" id="userQuery" name="userQuery" placeholder="Connecting…" autocomplete="off" disabled>
       <button id="sendBtn" disabled>Send →</button>
     </div>
@@ -213,9 +216,7 @@
 (() => {
   'use strict';
 
-  // Your real Botpress identifiers
   const CLIENT_ID = 'a2162a4c-c626-4885-9ea2-1605ae7be86c';
-  const BOT_CONFIG_SRC = 'https://files.bpcontent.cloud/2026/05/20/00/20260520003255-FYFA8KXL.js';
 
   const msgArea    = document.getElementById('chatMessages');
   const inputEl    = document.getElementById('userQuery');
@@ -266,49 +267,43 @@
     inputEl.disabled = true; sendBtn.disabled = true;
   }
 
-  // Dynamically load your bot configuration script file
-  function loadBotConfig() {
-    const script = document.createElement('script');
-    script.src = BOT_CONFIG_SRC;
-    script.async = true;
-    script.onload = initBotpressConnection;
-    document.head.appendChild(script);
-  }
-
-  // Fix 4: Rewritten completely using official v3 window.botpress Webchat API Event Methods
+  // Bind connection and configure visibility overrides natively
   function initBotpressConnection() {
     if (typeof window.botpressWebChat === 'undefined') {
       setTimeout(initBotpressConnection, 100);
       return;
     }
 
-    // Initialize the Webchat natively inside the window scope
+    // Force strict layout limits and hide default components from initialization
     window.botpressWebChat.init({ 
       clientId: CLIENT_ID,
       hostUrl: 'https://telemetry.botpress.cloud',
       botId: 'topic-1-chatbot',
-      hideWidget: true, // Native variable configuration hides the main launcher icon safely
-      disableAnimations: true
+      hideWidget: true, 
+      disableAnimations: true,
+      containerWidth: '0px',
+      layoutWidth: '0px'
     });
 
-    // Event listener catching incoming payloads directly from the Botpress core service
+    // Listen to incoming runtime actions
     window.botpressWebChat.onEvent((event) => {
-      // 1. Connection is ready
+      // Catch layout initialization hook
       if (event.type === 'LIFECYCLE.LOADED') {
         setStatus('ready', '● AI Ready');
         enableUI();
       }
 
-      // 2. Message received from the bot
+      // Route data directly into the custom UI window
       if (event.type === 'MESSAGE.RECEIVED') {
         hideTyping();
         waiting = false;
         enableUI();
 
+        // Extract raw payload
         const text = event.value?.payload?.text || event.value?.text || "";
         if (!text) return;
 
-        // Strip HTML parameters safely and format linebreaks
+        // Strip characters and format line breaks for your HTML bubble panels
         const safeHtml = text
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
@@ -327,7 +322,7 @@
     addMsg(text, 'user');
     showTyping();
     
-    // Send directly through the verified v3 API channel
+    // Fire event straight into the Botpress network loop
     window.botpressWebChat.sendEvent({
       type: 'message',
       text: text
@@ -351,7 +346,7 @@
   });
 
   scrollBottom();
-  loadBotConfig();
+  initBotpressConnection();
 })();
 </script>
 
