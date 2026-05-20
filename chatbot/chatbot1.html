@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Marketing Research & Analytics AI | Topic 1 Chatbot</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- 1. Load Botpress Webchat Scripts directly on the main window -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/05/20/00/20260520003255-FYFA8KXL.js"></script>
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -132,11 +136,11 @@
     .input-row button:hover:not(:disabled) { background: #0e3f28; }
     .input-row button:disabled { background: #94a3b8; cursor: not-allowed; }
 
-    /* Hidden Botpress iframe bridge */
-    #bp-bridge {
-      position: fixed; bottom: 0; right: 0;
-      width: 0; height: 0;
-      border: none; opacity: 0; pointer-events: none;
+    /* 2. COMPLETELY HIDE THE DEFAULT BOTPRESS WEBCHAT CONTAINERS FROM VIEW */
+    #bp-webchat, .bpw-layout, #botpress-webchat-container, iframe[aria-label="messaging window"] {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
 
     @media (max-width: 700px) {
@@ -157,21 +161,21 @@
     <div class="topic-section">
       <h4>📚 TOPIC 1: LEARNING TOPICS</h4>
       <div class="topic-list">
-        <div class="topic-chip" data-question="What is marketing research?">📖 Definition of Marketing Research</div>
-        <div class="topic-chip" data-question="What is the importance of marketing research?">⭐ Importance of Marketing Research</div>
-        <div class="topic-chip" data-question="What is the role of marketing research?">🎯 Role of Marketing Research</div>
-        <div class="topic-chip" data-question="What are the 6 steps in the marketing research process?">⚙️ Marketing Research Process (6 Steps)</div>
-        <div class="topic-chip" data-question="What is the marketing environment?">🌍 Marketing Environment</div>
-        <div class="topic-chip" data-question="What is problem identification research?">🔎 Problem Identification Research</div>
-        <div class="topic-chip" data-question="What is problem solving research?">🛠️ Problem Solving Research</div>
-        <div class="topic-chip" data-question="What is the difference between internal and external researchers?">👥 Internal vs External Researchers</div>
-        <div class="topic-chip" data-question="What are the qualities of a good marketing researcher?">✨ Qualities of a Marketing Researcher</div>
-        <div class="topic-chip" data-question="What is the scientific approach in marketing research?">🔬 Scientific Approach</div>
-        <div class="topic-chip" data-question="What are the marketing variables (micro-environment)?">📦 Marketing Mix (Controllable Variables)</div>
-        <div class="topic-chip" data-question="Who are the customers and stakeholders?">👥 Customers & Stakeholders</div>
-        <div class="topic-chip" data-question="What is research design?">📐 Research Design</div>
-        <div class="topic-chip" data-question="What is data collection in marketing research?">📊 Data Collection Methods</div>
-        <div class="topic-chip" data-question="What are the learning outcomes for Topic 1?">📚 Learning Outcomes</div>
+        <div class="topic-chip disabled" data-question="What is marketing research?">📖 Definition of Marketing Research</div>
+        <div class="topic-chip disabled" data-question="What is the importance of marketing research?">⭐ Importance of Marketing Research</div>
+        <div class="topic-chip disabled" data-question="What is the role of marketing research?">🎯 Role of Marketing Research</div>
+        <div class="topic-chip disabled" data-question="What are the 6 steps in the marketing research process?">⚙️ Marketing Research Process (6 Steps)</div>
+        <div class="topic-chip disabled" data-question="What is the marketing environment?">🌍 Marketing Environment</div>
+        <div class="topic-chip disabled" data-question="What is problem identification research?">🔎 Problem Identification Research</div>
+        <div class="topic-chip disabled" data-question="What is problem solving research?">🛠️ Problem Solving Research</div>
+        <div class="topic-chip disabled" data-question="What is the difference between internal and external researchers?">👥 Internal vs External Researchers</div>
+        <div class="topic-chip disabled" data-question="What are the qualities of a good marketing researcher?">✨ Qualities of a Marketing Researcher</div>
+        <div class="topic-chip disabled" data-question="What is the scientific approach in marketing research?">🔬 Scientific Approach</div>
+        <div class="topic-chip disabled" data-question="What are the marketing variables (micro-environment)?">📦 Marketing Mix (Controllable Variables)</div>
+        <div class="topic-chip disabled" data-question="Who are the customers and stakeholders?">👥 Customers & Stakeholders</div>
+        <div class="topic-chip disabled" data-question="What is research design?">📐 Research Design</div>
+        <div class="topic-chip disabled" data-question="What is data collection in marketing research?">📊 Data Collection Methods</div>
+        <div class="topic-chip disabled" data-question="What are the learning outcomes for Topic 1?">📚 Learning Outcomes</div>
       </div>
     </div>
   </div>
@@ -181,7 +185,7 @@
     <div class="chat-header">
       <div class="chat-header-left">
         <h3>🧠 Marketing Research & Analytics Tutor</h3>
-        <span>Powered by Botpress AI | Ask anything about Topic 1!</span>
+        <span>Custom Front-end Framework | Topic 1 Overview</span>
       </div>
       <div id="statusPill" class="status-pill connecting">
         <span class="status-dot"></span>
@@ -200,39 +204,25 @@
   </div>
 </div>
 
-<!--
-  HIDDEN IFRAME BRIDGE
-  We load Botpress inside an invisible iframe.
-  The iframe runs the full Botpress webchat (inject.js + config).
-  We communicate with it via postMessage.
-  The iframe page is a tiny self-contained HTML blob we generate
-  with URL.createObjectURL so there's no extra file needed.
--->
-<iframe id="bp-bridge" title="bot-bridge"></iframe>
-
 <script>
-(function () {
+(() => {
   'use strict';
 
-  var CLIENT_ID = 'a2162a4c-c626-4885-9ea2-1605ae7be86c';
-  var BOT_CONFIG_SRC = 'https://files.bpcontent.cloud/2026/05/20/00/20260520003255-FYFA8KXL.js';
+  const CLIENT_ID = 'a2162a4c-c626-4885-9ea2-1605ae7be86c';
 
-  var msgArea    = document.getElementById('chatMessages');
-  var inputEl    = document.getElementById('userQuery');
-  var sendBtn    = document.getElementById('sendBtn');
-  var statusPill = document.getElementById('statusPill');
-  var statusLbl  = document.getElementById('statusLabel');
-  var bpFrame    = document.getElementById('bp-bridge');
+  const msgArea    = document.getElementById('chatMessages');
+  const inputEl    = document.getElementById('userQuery');
+  const sendBtn    = document.getElementById('sendBtn');
+  const statusPill = document.getElementById('statusPill');
+  const statusLbl  = document.getElementById('statusLabel');
 
-  var isReady  = false;
-  var waiting  = false;
-  var pendingQ = null; // queue one message sent before ready
+  let isReady = false;
+  let waiting = false;
 
-  /* ── UI helpers ── */
   function scrollBottom() { msgArea.scrollTop = msgArea.scrollHeight; }
 
   function addMsg(html, role) {
-    var d = document.createElement('div');
+    const d = document.createElement('div');
     d.className = 'message-bubble ' + (role === 'user' ? 'user-msg' : 'bot-msg');
     if (role === 'bot') d.innerHTML = html;
     else d.textContent = html;
@@ -242,14 +232,14 @@
 
   function showTyping() {
     if (document.getElementById('typingDots')) return;
-    var d = document.createElement('div');
+    const d = document.createElement('div');
     d.className = 'typing-indicator'; d.id = 'typingDots';
     d.innerHTML = '<span></span><span></span><span></span>';
     msgArea.appendChild(d); scrollBottom();
   }
 
   function hideTyping() {
-    var d = document.getElementById('typingDots');
+    const d = document.getElementById('typingDots');
     if (d) d.remove();
   }
 
@@ -262,134 +252,85 @@
     isReady = true; waiting = false;
     inputEl.disabled = false; sendBtn.disabled = false;
     inputEl.placeholder = 'e.g., What is marketing research?';
-    document.querySelectorAll('.topic-chip').forEach(function(c){ c.classList.remove('disabled'); });
+    document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('disabled'));
   }
 
   function disableUI() {
     inputEl.disabled = true; sendBtn.disabled = true;
   }
 
-  /* ── Build the hidden iframe page as a Blob URL ──
-     This iframe runs Botpress entirely inside itself.
-     It listens for { type:'SEND', text:'...' } from the parent,
-     calls window.botpress.sendMessage(text) internally,
-     and listens for botpress 'message' events to post
-     { type:'BOT_REPLY', text:'...' } back to parent.
-  ── */
-  var iframeHTML = [
-    '<!DOCTYPE html><html><head>',
-    '<script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"><\/script>',
-    '<\/head><body>',
-    '<script src="' + BOT_CONFIG_SRC + '"><\/script>',
-    '<script>',
-    '(function(){',
-    '  var CLIENT_ID = "' + CLIENT_ID + '";',
-    '  var ready = false;',
-    '  var queue = [];',
-
-    /* Listen for SEND commands from parent */
-    '  window.addEventListener("message", function(e){',
-    '    if(!e.data || e.data.type !== "SEND") return;',
-    '    var txt = e.data.text;',
-    '    if(ready){ window.botpress.sendMessage(txt); }',
-    '    else { queue.push(txt); }',
-    '  });',
-
-    /* Wait for SDK */
-    '  function waitSDK(){',
-    '    if(typeof window.botpress === "undefined"){ setTimeout(waitSDK,150); return; }',
-
-    /* Forward bot replies to parent */
-    '    window.botpress.on("message", function(msg){',
-    '      if(msg.direction === "outgoing") return;',
-    '      var text = (msg.payload && msg.payload.text) || msg.text || "";',
-    '      if(!text) return;',
-    '      window.parent.postMessage({ type:"BOT_REPLY", text:text }, "*");',
-    '    });',
-
-    /* On ready: open webchat (required for sendMessage), flush queue */
-    '    window.botpress.on("webchat:ready", function(){',
-    '      ready = true;',
-    '      window.botpress.open();',
-    '      window.parent.postMessage({ type:"BP_READY" }, "*");',
-    '      queue.forEach(function(t){ window.botpress.sendMessage(t); });',
-    '      queue = [];',
-    '    });',
-
-    '    window.botpress.on("webchat:initialized", function(){',
-    '      window.botpress.open();',
-    '    });',
-
-    '    window.botpress.init({ clientId: CLIENT_ID });',
-    '  }',
-    '  waitSDK();',
-    '})();',
-    '<\/script>',
-    '<\/body><\/html>'
-  ].join('\n');
-
-  /* Create a Blob URL for the iframe */
-  var blob = new Blob([iframeHTML], { type: 'text/html' });
-  var blobURL = URL.createObjectURL(blob);
-  bpFrame.src = blobURL;
-
-  /* ── Listen for messages FROM the iframe ── */
-  window.addEventListener('message', function (e) {
-    if (!e.data) return;
-
-    if (e.data.type === 'BP_READY') {
-      setStatus('ready', '● AI Ready');
-      enableUI();
-      if (pendingQ) {
-        var q = pendingQ; pendingQ = null;
-        setTimeout(function(){ doSend(q); }, 100);
-      }
+  /* 3. Initialize Botpress natively directly on the main window */
+  function initBotpress() {
+    if (typeof window.botpress === 'undefined') {
+      setTimeout(initBotpress, 100);
+      return;
     }
 
-    if (e.data.type === 'BOT_REPLY') {
+    window.botpress.init({ 
+      clientId: CLIENT_ID,
+      configuration: {
+        containerWidth: '0px',
+        layoutWidth: '0px',
+        hideWidget: true // Tells Botpress natively to hide its core launcher UI button
+      }
+    });
+
+    // Handle bot messages coming back
+    window.botpress.on('message', (msg) => {
+      if (msg.direction === 'outgoing') return; // Ignore user messages echoed back
+      
       hideTyping();
       waiting = false;
       enableUI();
-      // Escape HTML in bot reply to prevent XSS, then display
-      var safe = e.data.text
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/\n/g,'<br>');
-      addMsg(safe, 'bot');
-    }
-  });
 
-  /* Fallback: enable UI after 10s */
-  setTimeout(function(){
-    if (!isReady) { setStatus('ready', '● AI Ready'); enableUI(); }
-  }, 10000);
+      const text = (msg.payload && msg.payload.text) || msg.text || "";
+      if (!text) return;
 
-  /* ── Send ── */
+      const safeHtml = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\n/g, '<br>');
+      
+      addMsg(safeHtml, 'bot');
+    });
+
+    // Handle the ready lifecycle hook
+    window.botpress.on('webchat:ready', () => {
+      setStatus('ready', '● AI Ready');
+      enableUI();
+    });
+  }
+
   function doSend(text) {
-    if (!text) return;
+    if (!text || waiting) return;
     waiting = true;
     disableUI();
     addMsg(text, 'user');
     showTyping();
-    bpFrame.contentWindow.postMessage({ type: 'SEND', text: text }, '*');
+    
+    // Natively dispatch directly via the initialized global window client
+    window.botpress.sendMessage(text);
   }
 
   function handleSend(override) {
-    var text = override || inputEl.value.trim();
-    if (!text || waiting) return;
-    inputEl.value = '';
-    if (!isReady) { pendingQ = text; addMsg(text, 'user'); showTyping(); return; }
+    const text = override || inputEl.value.trim();
+    if (!text || (waiting && !override)) return;
+    if (!override) inputEl.value = '';
     doSend(text);
   }
 
-  sendBtn.addEventListener('click', function(){ handleSend(); });
-  inputEl.addEventListener('keypress', function(e){ if(e.key==='Enter') handleSend(); });
-  document.querySelectorAll('.topic-chip').forEach(function(chip){
-    chip.addEventListener('click', function(){
+  sendBtn.addEventListener('click', () => handleSend());
+  inputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+  
+  document.querySelectorAll('.topic-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
       handleSend(chip.getAttribute('data-question'));
     });
   });
 
   scrollBottom();
+  initBotpress();
 })();
 </script>
 
